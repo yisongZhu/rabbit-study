@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rabbit.dao.TTestCaseUiLogMapper">
+  <resultMap id="BaseResultMap" type="com.rabbit.model.TTestCaseUiLog">
+    <!--@mbg.generated-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="plan_id" jdbcType="BIGINT" property="planId" />
+    <result column="case_id" jdbcType="BIGINT" property="caseId" />
+    <result column="case_name" jdbcType="VARCHAR" property="caseName" />
+    <result column="business_id" jdbcType="BIGINT" property="businessId" />
+    <result column="business_log_id" jdbcType="BIGINT" property="businessLogId" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, plan_id, case_id, case_name, business_id, business_log_id, `status`, end_time, 
+    remark, create_by, create_time, update_by, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select 
+    <include refid="Base_Column_List" />
+    from t_test_case_ui_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--@mbg.generated-->
+    delete from t_test_case_ui_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.rabbit.model.TTestCaseUiLog" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into t_test_case_ui_log (plan_id, case_id, case_name, 
+      business_id, business_log_id, `status`, 
+      end_time, remark, create_by, 
+      create_time, update_by, update_time
+      )
+    values (#{planId,jdbcType=BIGINT}, #{caseId,jdbcType=BIGINT}, #{caseName,jdbcType=VARCHAR}, 
+      #{businessId,jdbcType=BIGINT}, #{businessLogId,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, 
+      #{endTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.rabbit.model.TTestCaseUiLog" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into t_test_case_ui_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="planId != null">
+        plan_id,
+      </if>
+      <if test="caseId != null">
+        case_id,
+      </if>
+      <if test="caseName != null and caseName != ''">
+        case_name,
+      </if>
+      <if test="businessId != null">
+        business_id,
+      </if>
+      <if test="businessLogId != null">
+        business_log_id,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+      <if test="remark != null and remark != ''">
+        remark,
+      </if>
+      <if test="createBy != null and createBy != ''">
+        create_by,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateBy != null and updateBy != ''">
+        update_by,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="planId != null">
+        #{planId,jdbcType=BIGINT},
+      </if>
+      <if test="caseId != null">
+        #{caseId,jdbcType=BIGINT},
+      </if>
+      <if test="caseName != null and caseName != ''">
+        #{caseName,jdbcType=VARCHAR},
+      </if>
+      <if test="businessId != null">
+        #{businessId,jdbcType=BIGINT},
+      </if>
+      <if test="businessLogId != null">
+        #{businessLogId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null and remark != ''">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null and createBy != ''">
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null and updateBy != ''">
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rabbit.model.TTestCaseUiLog">
+    <!--@mbg.generated-->
+    update t_test_case_ui_log
+    <set>
+      <if test="planId != null">
+        plan_id = #{planId,jdbcType=BIGINT},
+      </if>
+      <if test="caseId != null">
+        case_id = #{caseId,jdbcType=BIGINT},
+      </if>
+      <if test="caseName != null and caseName != ''">
+        case_name = #{caseName,jdbcType=VARCHAR},
+      </if>
+      <if test="businessId != null">
+        business_id = #{businessId,jdbcType=BIGINT},
+      </if>
+      <if test="businessLogId != null">
+        business_log_id = #{businessLogId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null and remark != ''">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null and createBy != ''">
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null and updateBy != ''">
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rabbit.model.TTestCaseUiLog">
+    <!--@mbg.generated-->
+    update t_test_case_ui_log
+    set plan_id = #{planId,jdbcType=BIGINT},
+      case_id = #{caseId,jdbcType=BIGINT},
+      case_name = #{caseName,jdbcType=VARCHAR},
+      business_id = #{businessId,jdbcType=BIGINT},
+      business_log_id = #{businessLogId,jdbcType=BIGINT},
+      `status` = #{status,jdbcType=INTEGER},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+<!--auto generated by MybatisCodeHelper on 2019-08-26-->
+  <delete id="deleteByPlanId">
+    delete from t_test_case_ui_log
+    where plan_id=#{planId,jdbcType=BIGINT}
+  </delete>
+
+<!--auto generated by MybatisCodeHelper on 2019-08-27-->
+  <select id="countByPlanIdAndBusinessIdAndStatusAndBusinessLogId" resultType="java.lang.Long">
+    select count(1)
+    from t_test_case_ui_log
+    where plan_id=#{planId,jdbcType=BIGINT} and business_id=#{businessId,jdbcType=BIGINT} and
+    `status`=#{status,jdbcType=INTEGER} and business_log_id=#{businessLogId,jdbcType=BIGINT}
+  </select>
+
+<!--auto generated by MybatisCodeHelper on 2019-08-28-->
+  <select id="findByAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from t_test_case_ui_log
+    where 1=1
+    <if test="id != null">
+      and id=#{id,jdbcType=BIGINT}
+    </if>
+    <if test="planId != null">
+      and plan_id=#{planId,jdbcType=BIGINT}
+    </if>
+    <if test="caseId != null">
+      and case_id=#{caseId,jdbcType=BIGINT}
+    </if>
+    <if test="caseName != null and caseName != ''">
+      and case_name=#{caseName,jdbcType=VARCHAR}
+    </if>
+    <if test="businessId != null">
+      and business_id=#{businessId,jdbcType=BIGINT}
+    </if>
+    <if test="businessLogId != null">
+      and business_log_id=#{businessLogId,jdbcType=BIGINT}
+    </if>
+    <if test="status != null">
+      and `status`=#{status,jdbcType=INTEGER}
+    </if>
+    <if test="endTime != null">
+      and end_time=#{endTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="remark != null and remark != ''">
+      and remark=#{remark,jdbcType=VARCHAR}
+    </if>
+    <if test="createBy != null and createBy != ''">
+      and create_by=#{createBy,jdbcType=VARCHAR}
+    </if>
+    <if test="createTime != null">
+      and create_time=#{createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="updateBy != null and updateBy != ''">
+      and update_by=#{updateBy,jdbcType=VARCHAR}
+    </if>
+    <if test="updateTime != null">
+      and update_time=#{updateTime,jdbcType=TIMESTAMP}
+    </if>
+  </select>
+
+</mapper>

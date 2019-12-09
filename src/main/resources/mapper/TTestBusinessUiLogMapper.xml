@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rabbit.dao.TTestBusinessUiLogMapper">
+  <resultMap id="BaseResultMap" type="com.rabbit.model.TTestBusinessUiLog">
+    <!--@mbg.generated-->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="business_id" jdbcType="BIGINT" property="businessId" />
+    <result column="business_name" jdbcType="VARCHAR" property="businessName" />
+    <result column="plan_id" jdbcType="BIGINT" property="planId" />
+    <result column="project_id" jdbcType="BIGINT" property="projectId" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="case_total_count" jdbcType="INTEGER" property="caseTotalCount" />
+    <result column="case_succ_count" jdbcType="INTEGER" property="caseSuccCount" />
+    <result column="case_fail_count" jdbcType="INTEGER" property="caseFailCount" />
+    <result column="case_skip_count" jdbcType="INTEGER" property="caseSkipCount" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated-->
+    id, business_id, business_name, plan_id, project_id, `status`, case_total_count, 
+    case_succ_count, case_fail_count, case_skip_count, end_time, remark, create_by, create_time, 
+    update_by, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--@mbg.generated-->
+    select 
+    <include refid="Base_Column_List" />
+    from t_test_business_ui_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <!--@mbg.generated-->
+    delete from t_test_business_ui_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.rabbit.model.TTestBusinessUiLog" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into t_test_business_ui_log (business_id, business_name, plan_id, 
+      project_id, `status`, case_total_count, 
+      case_succ_count, case_fail_count, case_skip_count, 
+      end_time, remark, create_by, 
+      create_time, update_by, update_time
+      )
+    values (#{businessId,jdbcType=BIGINT}, #{businessName,jdbcType=VARCHAR}, #{planId,jdbcType=BIGINT}, 
+      #{projectId,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, #{caseTotalCount,jdbcType=INTEGER}, 
+      #{caseSuccCount,jdbcType=INTEGER}, #{caseFailCount,jdbcType=INTEGER}, #{caseSkipCount,jdbcType=INTEGER}, 
+      #{endTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.rabbit.model.TTestBusinessUiLog" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into t_test_business_ui_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="businessId != null">
+        business_id,
+      </if>
+      <if test="businessName != null and businessName != ''">
+        business_name,
+      </if>
+      <if test="planId != null">
+        plan_id,
+      </if>
+      <if test="projectId != null">
+        project_id,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="caseTotalCount != null">
+        case_total_count,
+      </if>
+      <if test="caseSuccCount != null">
+        case_succ_count,
+      </if>
+      <if test="caseFailCount != null">
+        case_fail_count,
+      </if>
+      <if test="caseSkipCount != null">
+        case_skip_count,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+      <if test="remark != null and remark != ''">
+        remark,
+      </if>
+      <if test="createBy != null and createBy != ''">
+        create_by,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateBy != null and updateBy != ''">
+        update_by,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="businessId != null">
+        #{businessId,jdbcType=BIGINT},
+      </if>
+      <if test="businessName != null and businessName != ''">
+        #{businessName,jdbcType=VARCHAR},
+      </if>
+      <if test="planId != null">
+        #{planId,jdbcType=BIGINT},
+      </if>
+      <if test="projectId != null">
+        #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="caseTotalCount != null">
+        #{caseTotalCount,jdbcType=INTEGER},
+      </if>
+      <if test="caseSuccCount != null">
+        #{caseSuccCount,jdbcType=INTEGER},
+      </if>
+      <if test="caseFailCount != null">
+        #{caseFailCount,jdbcType=INTEGER},
+      </if>
+      <if test="caseSkipCount != null">
+        #{caseSkipCount,jdbcType=INTEGER},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null and remark != ''">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null and createBy != ''">
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null and updateBy != ''">
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rabbit.model.TTestBusinessUiLog">
+    <!--@mbg.generated-->
+    update t_test_business_ui_log
+    <set>
+      <if test="businessId != null">
+        business_id = #{businessId,jdbcType=BIGINT},
+      </if>
+      <if test="businessName != null and businessName != ''">
+        business_name = #{businessName,jdbcType=VARCHAR},
+      </if>
+      <if test="planId != null">
+        plan_id = #{planId,jdbcType=BIGINT},
+      </if>
+      <if test="projectId != null">
+        project_id = #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="caseTotalCount != null">
+        case_total_count = #{caseTotalCount,jdbcType=INTEGER},
+      </if>
+      <if test="caseSuccCount != null">
+        case_succ_count = #{caseSuccCount,jdbcType=INTEGER},
+      </if>
+      <if test="caseFailCount != null">
+        case_fail_count = #{caseFailCount,jdbcType=INTEGER},
+      </if>
+      <if test="caseSkipCount != null">
+        case_skip_count = #{caseSkipCount,jdbcType=INTEGER},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null and remark != ''">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null and createBy != ''">
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null and updateBy != ''">
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.rabbit.model.TTestBusinessUiLog">
+    <!--@mbg.generated-->
+    update t_test_business_ui_log
+    set business_id = #{businessId,jdbcType=BIGINT},
+      business_name = #{businessName,jdbcType=VARCHAR},
+      plan_id = #{planId,jdbcType=BIGINT},
+      project_id = #{projectId,jdbcType=BIGINT},
+      `status` = #{status,jdbcType=INTEGER},
+      case_total_count = #{caseTotalCount,jdbcType=INTEGER},
+      case_succ_count = #{caseSuccCount,jdbcType=INTEGER},
+      case_fail_count = #{caseFailCount,jdbcType=INTEGER},
+      case_skip_count = #{caseSkipCount,jdbcType=INTEGER},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+<!--auto generated by MybatisCodeHelper on 2019-08-21-->
+  <select id="countByPlanIdAndStatus" resultType="java.lang.Long">
+        select count(1)
+        from t_test_business_ui_log
+        where plan_id=#{planId,jdbcType=BIGINT} and `status`=#{status,jdbcType=INTEGER}
+    </select>
+
+<!--auto generated by MybatisCodeHelper on 2019-08-26-->
+  <delete id="deleteByPlanId">
+        delete from t_test_business_ui_log
+        where plan_id=#{planId,jdbcType=BIGINT}
+    </delete>
+
+<!--auto generated by MybatisCodeHelper on 2019-08-27-->
+  <select id="findByAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from t_test_business_ui_log
+    where 1=1
+    <if test="id != null">
+      and id=#{id,jdbcType=BIGINT}
+    </if>
+    <if test="businessId != null">
+      and business_id=#{businessId,jdbcType=BIGINT}
+    </if>
+    <if test="businessName != null and businessName != ''">
+      and business_name=#{businessName,jdbcType=VARCHAR}
+    </if>
+    <if test="planId != null">
+      and plan_id=#{planId,jdbcType=BIGINT}
+    </if>
+    <if test="projectId != null">
+      and project_id=#{projectId,jdbcType=BIGINT}
+    </if>
+    <if test="status != null">
+      and `status`=#{status,jdbcType=INTEGER}
+    </if>
+    <if test="caseTotalCount != null">
+      and case_total_count=#{caseTotalCount,jdbcType=INTEGER}
+    </if>
+    <if test="caseSuccCount != null">
+      and case_succ_count=#{caseSuccCount,jdbcType=INTEGER}
+    </if>
+    <if test="caseFailCount != null">
+      and case_fail_count=#{caseFailCount,jdbcType=INTEGER}
+    </if>
+    <if test="caseSkipCount != null">
+      and case_skip_count=#{caseSkipCount,jdbcType=INTEGER}
+    </if>
+    <if test="endTime != null">
+      and end_time=#{endTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="remark != null and remark != ''">
+      and remark=#{remark,jdbcType=VARCHAR}
+    </if>
+    <if test="createBy != null and createBy != ''">
+      and create_by=#{createBy,jdbcType=VARCHAR}
+    </if>
+    <if test="createTime != null">
+      and create_time=#{createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="updateBy != null and updateBy != ''">
+      and update_by=#{updateBy,jdbcType=VARCHAR}
+    </if>
+    <if test="updateTime != null">
+      and update_time=#{updateTime,jdbcType=TIMESTAMP}
+    </if>
+  </select>
+
+<!--auto generated by MybatisCodeHelper on 2019-08-27-->
+  <select id="findByPlanIdCount" resultMap="BaseResultMap">
+    select
+    plan_id,
+    SUM(case_total_count) AS case_total_count,
+    SUM(case_succ_count) AS case_succ_count,
+    SUM(case_fail_count) AS case_fail_count,
+    SUM(case_skip_count) AS case_skip_count,
+    MAX(end_time) AS end_time,
+    MIN(create_time) AS create_time
+    from t_test_business_ui_log
+    where plan_id=#{planId,jdbcType=BIGINT}
+    group by plan_id
+  </select>
+
+</mapper>
