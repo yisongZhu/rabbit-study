@@ -6,7 +6,6 @@ public interface ExcUiService {
 
     String excJob(Job job);
 
-    String debugCase(Long caseId);
 }
 
 

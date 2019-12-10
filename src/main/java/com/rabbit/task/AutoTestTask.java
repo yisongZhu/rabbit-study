@@ -123,12 +123,12 @@ public class AutoTestTask {
 
             UiTemplateParams uiTemplateParams = new UiTemplateParams();
             uiTemplateParams.setPlanLogId(planLogId);
-            uiTemplateParams.setJobname(planLogName);
             uiTemplateParams.setWebip(InetAddress.getLocalHost().getHostAddress());
+            uiTemplateParams.setJobname(planLogName);
             uiTemplateParams.setWebport(webPort);
             uiTemplateParams.setContextpath(contextPath);
-            uiTemplateParams.setBusinesscount(businesscount);
             uiTemplateParams.setBusinesstime(businesstime.intValue());
+            uiTemplateParams.setBusinesscount(businesscount);
             uiTemplateParams.setCasecount(byPlanIdCount.getCaseTotalCount());
             uiTemplateParams.setCasesuc(byPlanIdCount.getCaseSuccCount());
             uiTemplateParams.setCasefail(byPlanIdCount.getCaseFailCount());

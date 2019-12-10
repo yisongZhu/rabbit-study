@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class UiTemplateParams  implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Long planLogId;
+	private String createTime;
 	private String webip;
 	private String webport;
 	private String contextpath;

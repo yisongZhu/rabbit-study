@@ -3,16 +3,22 @@ package com.rabbit.service.Impl;
 import com.alibaba.fastjson.JSONObject;
 import com.rabbit.dao.TPlanSuiteUiMapper;
 import com.rabbit.dao.TTestSuiteUiLogMapper;
+import com.rabbit.dto.UiTemplateParams;
 import com.rabbit.hessian.factory.config.ClientFactory;
 import com.rabbit.model.*;
-import com.rabbit.service.ClientService;
-import com.rabbit.service.ExcUiService;
-import com.rabbit.service.TTestPlanUiNewLogService;
+import com.rabbit.service.*;
+import com.rabbit.utils.DateUtil;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -33,6 +39,22 @@ public class excJobServiceImpl implements ExcUiService {
     @Autowired
     private TTestSuiteUiLogMapper testSuiteUiLogMapper;
 
+    @Autowired
+    private TTestSuiteUiLogService testSuiteUiLogService;
+
+
+    @Autowired
+    private SendMailSevice sendMailSevice;
+
+    private static String EMAIL_REGEX = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
+
+    @Value("${server.port}")
+    private String webPort;
+
+
     @Override
     public String excJob(Job job) {
         JSONObject jsonObject = JSONObject.parseObject(job.getMethodParams());
@@ -40,6 +62,7 @@ public class excJobServiceImpl implements ExcUiService {
         Client client = clientService.findById(jobParams.getClientId());
         log.info("开始执行ui自动化任务,测试自动化计划日志");
         TTestPlanUiNewLog tTestPlanUiLog = new TTestPlanUiNewLog();
+        tTestPlanUiLog.setCreateTime(new Date());
         tTestPlanUiLog.setName(job.getJobGroup());
         tTestPlanUiLog.setJobId(job.getJobId());
         tTestPlanUiLog.setProjectId(job.getProjectId());
@@ -70,15 +93,46 @@ public class excJobServiceImpl implements ExcUiService {
         endPlanLog.setSuiteFailCount(failCount);
         endPlanLog.setEndTime(new Date());
         testPlanUiNewLogService.updateByPrimaryKeySelective(endPlanLog);
-
+        if (jobParams.getIsSendEmail().equals(1) & StringUtils.isNotBlank(jobParams.getReceivers())) {
+            try {
+                sendUiReportMail(jobParams.getReceivers(), tTestPlanUiLog.getId(), tTestPlanUiLog.getName(), totalCount,tTestPlanUiLog.getCreateTime());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         return "执行ui自动化任务结束";
     }
 
-    @Override
-    public String debugCase(Long caseId) {
-        log.info("开始debug ui自动化用例");
-        return "debug用例结束";
+    private void sendUiReportMail(String sendTo, Long planLogId, String planLogName, int businesscount, Date createTime) throws Exception {
+        String[] split = sendTo.replace("；", ";").split(";");
+        List list = new ArrayList();
+        for (String to : split) {
+            String trim = to.trim();
+            if (trim.matches(EMAIL_REGEX)) {
+                list.add(trim);
+            }
+        }
+        if (list.size() > 0) {
+            TTestSuiteUiLog byPlanIdCount = testSuiteUiLogService.findByPlanIdCount(planLogId);
+            Long businesstime = (byPlanIdCount.getEndTime().getTime() - byPlanIdCount.getCreateTime().getTime()) / 1000;
+
+            UiTemplateParams uiTemplateParams = new UiTemplateParams();
+            uiTemplateParams.setPlanLogId(planLogId);
+            uiTemplateParams.setCreateTime(DateUtil.format(createTime,"yyyy-MM-dd HH:mm:ss"));
+            uiTemplateParams.setJobname(planLogName);
+            uiTemplateParams.setWebip(InetAddress.getLocalHost().getHostAddress());
+            uiTemplateParams.setWebport(webPort);
+            uiTemplateParams.setContextpath(contextPath);
+            uiTemplateParams.setBusinesscount(businesscount);
+            uiTemplateParams.setBusinesstime(businesstime.intValue());
+            uiTemplateParams.setCasecount(byPlanIdCount.getCaseTotalCount());
+            uiTemplateParams.setCasesuc(byPlanIdCount.getCaseSuccCount());
+            uiTemplateParams.setCasefail(byPlanIdCount.getCaseFailCount());
+            uiTemplateParams.setCaseskip(byPlanIdCount.getCaseSkipCount());
+            sendMailSevice.sendMailTemplate(list, "任务：【" + planLogName + "】自动化测试结果邮件通知！", "ui-test-new.ftl", uiTemplateParams);
+        }
     }
+
 }
 
 
