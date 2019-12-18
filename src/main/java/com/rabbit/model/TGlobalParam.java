@@ -3,57 +3,57 @@ package com.rabbit.model;
 import java.io.Serializable;
 import java.util.Date;
 
-public class GlobalParam implements Serializable {
+public class TGlobalParam implements Serializable {
     /**
-     * id
-     */
+    * id
+    */
     private Long id;
 
     /**
-     * 参数名称
-     */
+    * 参数名称
+    */
     private String paramName;
 
     private Long projectId;
 
     /**
-     * 参数类型：1、字符串 2、数值 3、数据库 4、布尔 5、函数
-     */
+    * 参数类型：1、字符串 2、数值 3、数据库 4、布尔 5、函数
+    */
     private Integer paramType;
 
     /**
-     * 参数值
-     */
+    * 参数值
+    */
     private String paramValue;
 
     /**
-     * 类型：1、ui自动化  2、接口自动化 、3 、app自动化
-     */
+    * 类型：1、ui自动化  2、接口自动化 、3 、app自动化
+    */
     private Integer type;
 
     /**
-     * 备注
-     */
+    * 备注
+    */
     private String remark;
 
     /**
-     * createBy
-     */
+    * createBy
+    */
     private String createBy;
 
     /**
-     * createTime
-     */
+    * createTime
+    */
     private Date createTime;
 
     /**
-     * updateBy
-     */
+    * updateBy
+    */
     private String updateBy;
 
     /**
-     * updateTime
-     */
+    * updateTime
+    */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

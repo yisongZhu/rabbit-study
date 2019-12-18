@@ -46,13 +46,21 @@ public class GlobalParamServiceImpl implements GlobalParamService {
         PageHelper.startPage(page, pageSize);
         return new PageInfo<>(globalParamMapper.findByAll(globalParam));
     }
+
     @Override
     public List<GlobalParam> findByParamNameAndProjectId(String paramName, Long projectId) {
         return globalParamMapper.findByParamNameAndProjectId(paramName, projectId);
     }
+
     @Override
     public List<GlobalParam> findByParamNameAndProjectIdAndIdNot(String paramName, Long projectId, Long notId) {
         return globalParamMapper.findByParamNameAndProjectIdAndIdNot(paramName, projectId, notId);
     }
+
+    @Override
+    public int insert(GlobalParam record) {
+        return globalParamMapper.insert(record);
+    }
 }
+
 

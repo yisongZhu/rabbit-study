@@ -22,6 +22,5 @@ public interface TTestStepUiNewLogMapper {
 
     List<TTestStepUiNewLog> findByAll(TTestStepUiNewLog tTestStepUiNewLog);
 
-
-
+    List<TTestStepUiNewLog> findByPlanJobId(@Param("planJobId")Long planJobId);
 }

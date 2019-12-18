@@ -5,6 +5,8 @@ import com.rabbit.model.GlobalParam;import org.apache.ibatis.annotations.Param;i
 public interface GlobalParamMapper {
     int deleteByPrimaryKey(Long id);
 
+    int insert(GlobalParam record);
+
     int insertSelective(GlobalParam record);
 
     GlobalParam selectByPrimaryKey(Long id);
@@ -15,8 +17,7 @@ public interface GlobalParamMapper {
 
     List<GlobalParam> findByAll(GlobalParam globalParam);
 
-    List<GlobalParam> findByParamNameAndProjectId(@Param("paramName")String paramName,@Param("projectId")Long projectId);
+    List<GlobalParam> findByParamNameAndProjectId(@Param("paramName") String paramName, @Param("projectId") Long projectId);
 
-    List<GlobalParam> findByParamNameAndProjectIdAndIdNot(@Param("paramName")String paramName,@Param("projectId")Long projectId,@Param("notId")Long notId);
-
+    List<GlobalParam> findByParamNameAndProjectIdAndIdNot(@Param("paramName") String paramName, @Param("projectId") Long projectId, @Param("notId") Long notId);
 }

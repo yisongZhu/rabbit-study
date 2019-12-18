@@ -23,5 +23,8 @@ public interface GlobalParamService {
     List<GlobalParam> findByParamNameAndProjectId(String paramName, Long projectId);
 
     List<GlobalParam> findByParamNameAndProjectIdAndIdNot(String paramName, Long projectId, Long notId);
+
+    int insert(GlobalParam record);
 }
+
 

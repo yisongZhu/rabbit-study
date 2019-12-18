@@ -4,6 +4,7 @@ import com.rabbit.service.SendMailSevice;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class SendMailSeviceImpl implements SendMailSevice {
 
@@ -76,12 +78,13 @@ public class SendMailSeviceImpl implements SendMailSevice {
         model.put("params", templateParam);
 
         Configuration configuration = configurer.getConfiguration();
-        configuration.setClassLoaderForTemplateLoading(ClassLoader.getSystemClassLoader(),"email_template");
+        configuration.setClassLoaderForTemplateLoading(ClassLoader.getSystemClassLoader(), "email_template");
 //        configuration.setDefaultEncoding("gbk");
         configuration.setDefaultEncoding("utf-8");
         Template template = configuration.getTemplate(templateName);
         String text = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
         helper.setText(text, true);
         javaMailSender.send(message);
+        log.info("邮件[{}]发送成功", title);
     }
 }

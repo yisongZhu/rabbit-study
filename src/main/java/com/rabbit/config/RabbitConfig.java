@@ -21,6 +21,7 @@ public class RabbitConfig {
     public static String profile;
     public static String jmeterfile;
     public static String appfile;
+    public static String uifile;
 
 
     public static String getAppfile() {
@@ -28,7 +29,15 @@ public class RabbitConfig {
     }
 
     public static void setAppfile(String appfile) {
-        RabbitConfig.appfile =  projectPath + appfile + File.separator;
+        RabbitConfig.appfile = projectPath + appfile + File.separator;
+    }
+
+    public String getUifile() {
+        return uifile;
+    }
+
+    public void setUifile(String uifile) {
+        this.uifile = projectPath + uifile + File.separator;
     }
 
     public String getJmeterfile() {
@@ -36,7 +45,7 @@ public class RabbitConfig {
     }
 
     public void setJmeterfile(String jmeterfile) {
-        this.jmeterfile =  projectPath + jmeterfile + File.separator;
+        this.jmeterfile = projectPath + jmeterfile + File.separator;
     }
 
     public String getProfile() {
