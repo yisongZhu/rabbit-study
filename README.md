@@ -1,10 +1,9 @@
 # rabbit-platform-server
 
 #### 介绍
-这个是rabbit测试平台服务端
+[Rabbit]是一个开源的自动化测试平台，基于经典技术组合(Spring Boot、Spring Security、MyBatis、Jwt、Vue)，目前版本已支持UI自动化测试。平台采用关键字驱动，测试人员无需任何代码基础，即可轻松完成复杂的自动化测试工作。
 
 #### 软件架构
-[Rabbit]是一个开源的自动化测试平台，基于经典技术组合(Spring Boot、Spring Security、MyBatis、Jwt、Vue)，目前版本已支持UI自动化测试。平台采用关键字驱动，测试人员无需任何代码基础，即可轻松完成复杂的自动化测试工作。
 
 * 前端技术栈：vue+vuex+elementui+axios
 * 后端技术栈：springboot+mybatis+druid+mysql+security+jwt+quartz+hessian+selenium+appium
