@@ -46,7 +46,8 @@ public class excJobServiceImpl implements ExcUiService {
     @Autowired
     private SendMailSevice sendMailSevice;
 
-    private static String EMAIL_REGEX = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+//    private static String EMAIL_REGEX = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+    private static String EMAIL_REGEX =  "^[a-z0-9A-Z]+[- | a-z0-9A-Z . _]+@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-z]{2,}$";
 
     @Value("${server.servlet.context-path}")
     private String contextPath;
@@ -95,9 +96,10 @@ public class excJobServiceImpl implements ExcUiService {
         testPlanUiNewLogService.updateByPrimaryKeySelective(endPlanLog);
         if (jobParams.getIsSendEmail().equals(1) & StringUtils.isNotBlank(jobParams.getReceivers())) {
             try {
-                sendUiReportMail(jobParams.getReceivers(), tTestPlanUiLog.getId(), tTestPlanUiLog.getName(), totalCount,tTestPlanUiLog.getCreateTime());
+                sendUiReportMail(jobParams.getReceivers(), tTestPlanUiLog.getId(), tTestPlanUiLog.getName(), totalCount, tTestPlanUiLog.getCreateTime());
             } catch (Exception e) {
-                e.printStackTrace();
+                log.info("邮件发送失败", e);
+//                e.printStackTrace();
             }
         }
         return "执行ui自动化任务结束";
@@ -113,22 +115,24 @@ public class excJobServiceImpl implements ExcUiService {
             }
         }
         if (list.size() > 0) {
-            TTestSuiteUiLog byPlanIdCount = testSuiteUiLogService.findByPlanIdCount(planLogId);
-            Long businesstime = (byPlanIdCount.getEndTime().getTime() - byPlanIdCount.getCreateTime().getTime()) / 1000;
-
             UiTemplateParams uiTemplateParams = new UiTemplateParams();
+            TTestSuiteUiLog byPlanIdCount = testSuiteUiLogService.findByPlanIdCount(planLogId);
+            if(byPlanIdCount != null){
+                Long businesstime = (byPlanIdCount.getEndTime().getTime() - byPlanIdCount.getCreateTime().getTime()) / 1000;
+                uiTemplateParams.setBusinesstime(businesstime.intValue());
+                uiTemplateParams.setCasecount(byPlanIdCount.getCaseTotalCount());
+                uiTemplateParams.setCasesuc(byPlanIdCount.getCaseSuccCount());
+                uiTemplateParams.setCasefail(byPlanIdCount.getCaseFailCount());
+                uiTemplateParams.setCaseskip(byPlanIdCount.getCaseSkipCount());
+            }
             uiTemplateParams.setPlanLogId(planLogId);
-            uiTemplateParams.setCreateTime(DateUtil.format(createTime,"yyyy-MM-dd HH:mm:ss"));
+            uiTemplateParams.setCreateTime(DateUtil.format(createTime, "yyyy-MM-dd HH:mm:ss"));
             uiTemplateParams.setJobname(planLogName);
             uiTemplateParams.setWebip(InetAddress.getLocalHost().getHostAddress());
             uiTemplateParams.setWebport(webPort);
             uiTemplateParams.setContextpath(contextPath);
             uiTemplateParams.setBusinesscount(businesscount);
-            uiTemplateParams.setBusinesstime(businesstime.intValue());
-            uiTemplateParams.setCasecount(byPlanIdCount.getCaseTotalCount());
-            uiTemplateParams.setCasesuc(byPlanIdCount.getCaseSuccCount());
-            uiTemplateParams.setCasefail(byPlanIdCount.getCaseFailCount());
-            uiTemplateParams.setCaseskip(byPlanIdCount.getCaseSkipCount());
+
             sendMailSevice.sendMailTemplate(list, "任务：【" + planLogName + "】自动化测试结果邮件通知！", "ui-test-new.ftl", uiTemplateParams);
         }
     }

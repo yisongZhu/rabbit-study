@@ -55,6 +55,12 @@ public class ApiController {
         return new ResponseInfo(true, tApiService.findByProjectId(id));
     }
 
+    @GetMapping("/{id}")
+    @ApiOperation(value = "获取列表")
+    public ResponseInfo getByid(@PathVariable long id) {
+        return new ResponseInfo(true, tApiService.selectByPrimaryKey(id));
+    }
+
 
     @PostMapping("/add")
     @ApiOperation(value = "新增")
@@ -66,7 +72,7 @@ public class ApiController {
         tApi.setUpdateBy(UserUtil.getLoginUser().getUsername());
         tApi.setCreateBy(UserUtil.getLoginUser().getUsername());
         tApiService.insertSelective(tApi);
-        return new ResponseInfo(true, "保存接口成功");
+        return new ResponseInfo(true, tApi);
     }
 
     @PostMapping("/addSuite")

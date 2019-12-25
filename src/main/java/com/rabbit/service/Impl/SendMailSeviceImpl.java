@@ -1,12 +1,15 @@
 package com.rabbit.service.Impl;
 
+import com.rabbit.config.RabbitConfig;
 import com.rabbit.service.SendMailSevice;
+import com.rabbit.utils.FreemarkerUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,7 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,13 +81,14 @@ public class SendMailSeviceImpl implements SendMailSevice {
         Map<String, Object> model = new HashMap<>();
         model.put("params", templateParam);
 
-        Configuration configuration = configurer.getConfiguration();
-        configuration.setClassLoaderForTemplateLoading(ClassLoader.getSystemClassLoader(), "email_template");
-//        configuration.setDefaultEncoding("gbk");
-        configuration.setDefaultEncoding("utf-8");
-        Template template = configuration.getTemplate(templateName);
-        String text = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
-        helper.setText(text, true);
+//        Configuration configuration = configurer.getConfiguration();
+//        String path = RabbitConfig.projectPath + File.separator + "profile/email_template";
+//        configuration.setDirectoryForTemplateLoading(new File(path));
+//        configuration.setClassLoaderForTemplateLoading(ClassLoader.getSystemClassLoader(), "/email_template");
+//        configuration.setDefaultEncoding("utf-8");
+//        Template template = configuration.getTemplate(templateName);
+//        String text = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
+        helper.setText(FreemarkerUtil.process(templateName, model), true);
         javaMailSender.send(message);
         log.info("邮件[{}]发送成功", title);
     }

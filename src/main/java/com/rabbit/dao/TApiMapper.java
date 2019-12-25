@@ -25,7 +25,5 @@ public interface TApiMapper {
 
     List<TApi> findByApiSuiteId(@Param("apiSuiteId") Long apiSuiteId);
 
-    int deleteByApiSuiteId(@Param("apiSuiteId")Long apiSuiteId);
-
-
+    int deleteByApiSuiteId(@Param("apiSuiteId") Long apiSuiteId);
 }

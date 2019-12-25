@@ -8,6 +8,10 @@ import lombok.Data;
 public class TFileInfo implements Serializable {
     private Long id;
 
+    private String name;
+
+    private Long projectId;
+
     /**
      * 文件md5
      */
@@ -20,7 +24,7 @@ public class TFileInfo implements Serializable {
     private Long sourceId;
 
     /**
-     * 1、jmeter文档
+     * 1、ui  2、接口
      */
     private Integer sourceType;
 
@@ -28,8 +32,6 @@ public class TFileInfo implements Serializable {
      * 物理路径
      */
     private String path;
-
-    private String url;
 
     /**
      * 0 非图片 1图片

@@ -1,6 +1,8 @@
 package com.rabbit.utils.file;
 
+import com.rabbit.common.advice.Log;
 import com.rabbit.config.RabbitConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -15,6 +17,7 @@ import java.util.Date;
 /**
  * 文件上传工具类
  */
+@Slf4j
 public class FileUploadUtils {
 
     /**

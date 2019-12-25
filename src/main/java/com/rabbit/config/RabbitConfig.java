@@ -22,14 +22,20 @@ public class RabbitConfig {
     public static String jmeterfile;
     public static String appfile;
     public static String uifile;
+    public static String systemfile;
 
-
-    public static String getAppfile() {
+    public String getSystemfile() {
+        return systemfile;
+    }
+    public void setSystemfile(String systemfile) {
+        this.systemfile = projectPath + systemfile + File.separator;
+    }
+    public String getAppfile() {
         return appfile;
     }
 
-    public static void setAppfile(String appfile) {
-        RabbitConfig.appfile = projectPath + appfile + File.separator;
+    public void setAppfile(String appfile) {
+        this.appfile = projectPath + appfile + File.separator;
     }
 
     public String getUifile() {

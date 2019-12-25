@@ -1,9 +1,8 @@
 package com.rabbit.model;
 
-import lombok.Data;
-
 import java.io.Serializable;
 import java.util.Date;
+import lombok.Data;
 
 @Data
 public class TApi implements Serializable {
@@ -38,6 +37,11 @@ public class TApi implements Serializable {
     private String method;
 
     /**
+     * 环境id
+     */
+    private Long envId;
+
+    /**
      * 请求ip或者域名
      */
     private String host;
@@ -53,9 +57,54 @@ public class TApi implements Serializable {
     private Integer type;
 
     /**
+     * 备注
+     */
+    private String remark;
+
+    /**
      * 状态 0未完成 1已完成
      */
     private Integer status;
+
+    /**
+     * 请求头
+     */
+    private String reqHeader;
+
+    /**
+     * 请求query
+     */
+    private String reqQuery;
+
+    /**
+     * 请求body from-data格式
+     */
+    private String reqBodyData;
+
+    /**
+     * 请求body json格式
+     */
+    private String reqBodyJson;
+
+    /**
+     * 请求body的类型
+     */
+    private String reqBodyType;
+
+    /**
+     * 请求提取参数
+     */
+    private String reqExtract;
+
+    /**
+     * 请求断言
+     */
+    private String reqAssert;
+
+    /**
+     * 调试响应对象
+     */
+    private String debugRsp;
 
     /**
      * createBy

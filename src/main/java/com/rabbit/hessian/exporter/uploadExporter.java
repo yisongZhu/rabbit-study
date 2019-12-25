@@ -11,11 +11,22 @@ public class uploadExporter {
     @Autowired
     private FileUploadService fileUploadService;
 
+    @Autowired
+    private TFileInfoService fileInfoService;
+
     @Bean(name = "/hessian/fileUploadService")
-    public HessianServiceExporter testbusinessUiService() {
+    public HessianServiceExporter fileUploadService() {
         HessianServiceExporter exporter = new HessianServiceExporter();
         exporter.setService(fileUploadService);
         exporter.setServiceInterface(FileUploadService.class);
+        return exporter;
+    }
+
+    @Bean(name = "/hessian/fileInfoService")
+    public HessianServiceExporter fileInfoService() {
+        HessianServiceExporter exporter = new HessianServiceExporter();
+        exporter.setService(fileInfoService);
+        exporter.setServiceInterface(TFileInfoService.class);
         return exporter;
     }
 }

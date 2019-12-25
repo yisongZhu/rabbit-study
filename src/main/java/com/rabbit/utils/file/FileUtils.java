@@ -54,7 +54,7 @@ public class FileUtils {
     }
 
     /**
-     * 输出指定文件的byte数组
+     * 把InputStream 存入 文件
      *
      * @param fullPath 文件路径
      * @param data     输入流
@@ -99,7 +99,7 @@ public class FileUtils {
     }
 
     public static String getPath() {
-        return File.separator + LocalDate.now().toString().replace("-", File.separator) + File.separator;
+        return LocalDate.now().toString().replace("-", File.separator) + File.separator;
     }
     /**
      * 删除文件

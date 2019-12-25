@@ -13,10 +13,10 @@ public class UiTemplateParams  implements Serializable {
 	private String webport;
 	private String contextpath;
 	private String jobname;
-	private int businesstime;
-	private int businesscount;
-	private int casecount;
-	private int casesuc;
-	private int casefail;
-	private int caseskip;
+	private int businesstime = 0;
+	private int businesscount = 0;
+	private int casecount = 0;
+	private int casesuc = 0;
+	private int casefail = 0;
+	private int caseskip = 0;
 }
