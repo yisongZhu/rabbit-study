@@ -199,7 +199,7 @@
             and id=#{id,jdbcType=BIGINT}
         </if>
         <if test="name != null and name != ''">
-            and `name`=#{name,jdbcType=VARCHAR}
+            and `name`like concat('%', #{name,jdbcType=VARCHAR}, '%')
         </if>
         <if test="projectId != null">
             and project_id=#{projectId,jdbcType=BIGINT}

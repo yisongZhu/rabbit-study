@@ -102,6 +102,7 @@ public class TTestcaseUiNewServiceImpl implements TTestcaseUiNewService {
         tTestcaseUiNewMapper.insertSelective(testcaseUiNewDto);
         List<TStepUiNew> testSteps = testcaseUiNewDto.getTestSteps();
         for (TStepUiNew tStepUiNew : testSteps) {
+            tStepUiNew.setId(null);
             tStepUiNew.setTestcaseId(testcaseUiNewDto.getId());
         }
         String s = stepUiNewService.savaStep(testSteps);

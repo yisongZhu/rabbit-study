@@ -63,9 +63,9 @@ public class JobController {
     @PostMapping("/remove")
     @Transactional
     public ResponseInfo remove(@RequestBody JobDto job) {
-        if(job.getJobType().equals(1)){
+        if (job.getJobType() != null && job.getJobType().equals(1)) {
             planBusinessUiService.deleteByJobId(job.getJobId());
-        }else if (job.getJobType().equals(4)){
+        } else if (job.getJobType() != null && job.getJobType().equals(4)) {
             planSuiteUiMapper.deleteByJobId(job.getJobId());
         }
         jobService.deleteJob(job);
@@ -106,9 +106,9 @@ public class JobController {
             return new ResponseInfo(false, new ErrorInfo(300, "表达式错误"));
         }
         jobService.insertJobCron(job);
-        if(job.getJobType().equals(1)) {
+        if (job.getJobType() != null && job.getJobType().equals(1)) {
             planBusinessUiService.delAndAddListByJob(job);
-        }else if (job.getJobType().equals(4)){
+        } else if (job.getJobType() != null && job.getJobType().equals(4)) {
             tTestsuiteUiService.addUiSuiteToPlan(job);
         }
         return new ResponseInfo(true, "新增保存调度成功");
@@ -124,9 +124,10 @@ public class JobController {
         if (!jobService.checkCronExpressionIsValid(job.getCronExpression())) {
             return new ResponseInfo(false, new ErrorInfo(520, "表达式错误"));
         }
-        if(job.getJobType().equals(1)) {
+        log.info("修改定时任务==={}",job);
+        if (job.getJobType() != null && job.getJobType().equals(1)) {
             planBusinessUiService.delAndAddListByJob(job);
-        }else if(job.getJobType().equals(4)){
+        } else if (job.getJobType() != null && job.getJobType().equals(4)) {
             tTestsuiteUiService.addUiSuiteToPlan(job);
         }
         jobService.updateJobCron(job);
