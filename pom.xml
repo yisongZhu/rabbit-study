@@ -188,6 +188,18 @@
             <artifactId>c3p0</artifactId>
             <version>0.9.1</version>
         </dependency>
+        <!--接口工具-->
+        <!-- https://mvnrepository.com/artifact/io.rest-assured/rest-assured -->
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>3.3.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -206,10 +218,10 @@
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
-                <!--                <excludes>-->
-                <!--                    &lt;!&ndash;<exclude>webapp/**</exclude>&ndash;&gt;-->
-                <!--                    <exclude>*.yml</exclude>-->
-                <!--                </excludes>-->
+                <excludes>
+<!--                    <exclude>webapp/**</exclude>-->
+<!--                    <exclude>*.yml</exclude>-->
+                </excludes>
             </resource>
         </resources>
     </build>
