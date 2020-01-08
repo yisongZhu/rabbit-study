@@ -26,6 +26,8 @@ public interface TFileInfoMapper {
 
     List<TFileInfo> findByAll(TFileInfo tFileInfo);
 
+    int deleteBySourceTypeAndSourceId(@Param("sourceType")Integer sourceType,@Param("sourceId")Long sourceId);
 
+    List<TFileInfo> findBySourceTypeAndSourceId(@Param("sourceType")Integer sourceType,@Param("sourceId")Long sourceId);
 
 }

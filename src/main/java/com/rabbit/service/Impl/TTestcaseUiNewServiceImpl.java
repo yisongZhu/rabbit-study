@@ -7,6 +7,7 @@ import com.rabbit.dao.TSuiteCaseUiMapper;
 import com.rabbit.dao.TTestcaseUiNewDtoMapper;
 import com.rabbit.dto.TestcaseUiNewDto;
 import com.rabbit.model.TStepUiNew;
+import com.rabbit.service.TFileInfoService;
 import com.rabbit.service.TStepUiNewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,9 +39,13 @@ public class TTestcaseUiNewServiceImpl implements TTestcaseUiNewService {
     @Autowired
     private TSuiteCaseUiMapper tSuiteCaseUiMapper;
 
+    @Autowired
+    private TFileInfoService fileInfoService;
+
     @Override
     @Transactional
     public int deleteByPrimaryKey(Long id) {
+        fileInfoService.deleteBySourceTypeAndSourceId(1, id);
         stepUiNewMapper.deleteByTestcaseId(id);
         tSuiteCaseUiMapper.deleteByCaseId(id);
         return tTestcaseUiNewMapper.deleteByPrimaryKey(id);
@@ -136,9 +141,10 @@ public class TTestcaseUiNewServiceImpl implements TTestcaseUiNewService {
     public TestcaseUiNewDto selectByDtoByPrimaryKeyAndCaseType(Long id, Integer caseType) {
         return tTestcaseUiNewDtoMapper.selectByDtoByPrimaryKeyAndCaseType(id, caseType);
     }
+
     @Override
-    public List<TTestcaseUiNew> findByCaseTypeAndProjectId(Long caseType,Long projectId) {
-        return tTestcaseUiNewMapper.findByCaseTypeAndProjectId(caseType,projectId);
+    public List<TTestcaseUiNew> findByCaseTypeAndProjectId(Long caseType, Long projectId) {
+        return tTestcaseUiNewMapper.findByCaseTypeAndProjectId(caseType, projectId);
     }
 }
 

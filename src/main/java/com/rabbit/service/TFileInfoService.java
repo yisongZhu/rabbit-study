@@ -12,7 +12,7 @@ public interface TFileInfoService {
 
 
     int deleteByPrimaryKey(Long id);
-
+    int deleteBySourceTypeAndSourceId(Integer sourceType, Long sourceId);
     TFileInfo selectByPrimaryKey(Long id);
 
     int updateByPrimaryKeySelective(TFileInfo record);

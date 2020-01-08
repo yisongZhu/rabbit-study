@@ -20,10 +20,7 @@ import com.rabbit.service.TFileInfoService;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Date;
 import java.util.List;
 
@@ -45,6 +42,12 @@ public class TFileInfoServiceImpl implements TFileInfoService {
         return tFileInfoMapper.deleteByPrimaryKey(id);
     }
 
+    @Override
+    @Transactional
+    public int deleteBySourceTypeAndSourceId(Integer sourceType, Long sourceId) {
+        FileUtils.delFile(new File(RabbitConfig.systemfile + sourceType + "/" + sourceId));
+        return tFileInfoMapper.deleteBySourceTypeAndSourceId(sourceType, sourceId);
+    }
 
     @Override
     public TFileInfo selectByPrimaryKey(Long id) {
@@ -70,7 +73,8 @@ public class TFileInfoServiceImpl implements TFileInfoService {
         }
         String md5 = FileUtils.fileMd5(file.getInputStream());
         fileOrigName = fileInfo.getName() + fileOrigName.substring(fileOrigName.lastIndexOf("."));
-        String pathname = FileUtils.getPath() + fileOrigName;
+//        String pathname = FileUtils.getPath() + fileOrigName;
+        String pathname = fileInfo.getSourceType() + "/" + fileInfo.getSourceId() + "/" + fileOrigName;
         String fullPath = RabbitConfig.systemfile + pathname;
         FileUploadUtils.upload(fullPath, file);
         long size = file.getSize();
@@ -128,6 +132,7 @@ public class TFileInfoServiceImpl implements TFileInfoService {
             return new byte[0];
         }
     }
+
 }
 
 

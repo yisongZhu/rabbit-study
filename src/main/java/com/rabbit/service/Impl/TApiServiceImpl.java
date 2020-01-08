@@ -2,11 +2,16 @@ package com.rabbit.service.Impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.rabbit.service.TFileInfoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import javax.annotation.Resource;
+
 import com.rabbit.model.TApi;
 import com.rabbit.dao.TApiMapper;
 import com.rabbit.service.TApiService;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,9 +20,13 @@ public class TApiServiceImpl implements TApiService {
 
     @Resource
     private TApiMapper tApiMapper;
+    @Autowired
+    private TFileInfoService fileInfoService;
 
     @Override
+    @Transactional
     public int deleteByPrimaryKey(Long id) {
+        fileInfoService.deleteBySourceTypeAndSourceId(2, id);
         return tApiMapper.deleteByPrimaryKey(id);
     }
 

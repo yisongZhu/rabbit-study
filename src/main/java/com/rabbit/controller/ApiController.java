@@ -1,14 +1,15 @@
 package com.rabbit.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.rabbit.model.ErrorInfo;
-import com.rabbit.model.ResponseInfo;
-import com.rabbit.model.TApi;
-import com.rabbit.model.TApiSuite;
+import com.rabbit.dto.ApiDto;
+import com.rabbit.model.*;
+import com.rabbit.service.TApiEnvService;
 import com.rabbit.service.TApiService;
 import com.rabbit.service.TApiSuiteService;
 import com.rabbit.utils.FastJSONHelper;
 import com.rabbit.utils.UserUtil;
+import com.rabbit.utils.apitest.RequestExecutor;
+import io.restassured.response.Response;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,9 @@ public class ApiController {
 
     @Autowired
     private TApiSuiteService tApiSuiteService;
+
+    @Autowired
+    private TApiEnvService tApiEnvService;
 
     @GetMapping("/listPage")
     @ApiOperation(value = "获取分页带参列表")
@@ -60,7 +64,6 @@ public class ApiController {
     public ResponseInfo getByid(@PathVariable long id) {
         return new ResponseInfo(true, tApiService.selectByPrimaryKey(id));
     }
-
 
     @PostMapping("/add")
     @ApiOperation(value = "新增")
@@ -124,5 +127,21 @@ public class ApiController {
     public ResponseInfo delTApi(@RequestBody TApiSuite apiSuite) {
         tApiSuiteService.deleteByPrimaryKey(apiSuite.getId());
         return new ResponseInfo(true, "删除api分类成功");
+    }
+
+    @PostMapping("/debug")
+    @ApiOperation(value = "调试api")
+    public ResponseInfo debugTApi(@RequestBody ApiDto apiDto) {
+        TApiEnv tApiEnv = tApiEnvService.selectByPrimaryKey(apiDto.getEnvId());
+        apiDto.setPrepend(tApiEnv.getPrepend());
+        apiDto.setDomain(tApiEnv.getDomain());
+        apiDto.setGlobal(tApiEnv.getGlobal());
+        try {
+            ApiResult apiResult = new RequestExecutor(apiDto).executeHttpRequest();
+            return new ResponseInfo(true, apiResult);
+        }catch (Exception e){
+           log.error("debug出错：",e);
+            return new ResponseInfo(false,new ErrorInfo(12,e.getMessage()));
+        }
     }
 }
