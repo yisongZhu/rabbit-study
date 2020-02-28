@@ -40,7 +40,6 @@ public class SecurityHandlerConfig {
     @Bean
     public AuthenticationSuccessHandler loginSuccessHandler() {
         return new AuthenticationSuccessHandler() {
-
             @Override
             public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                                 Authentication authentication) throws IOException, ServletException {
@@ -60,7 +59,6 @@ public class SecurityHandlerConfig {
     @Bean
     public AuthenticationFailureHandler loginFailureHandler() {
         return new AuthenticationFailureHandler() {
-
             @Override
             public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
                                                 AuthenticationException exception) throws IOException, ServletException {
@@ -74,7 +72,6 @@ public class SecurityHandlerConfig {
                 ResponseUtil.responseJson(response, HttpStatus.OK.value(), info);
             }
         };
-
     }
 
     /**
@@ -85,7 +82,6 @@ public class SecurityHandlerConfig {
     @Bean
     public AuthenticationEntryPoint authenticationEntryPoint() {
         return new AuthenticationEntryPoint() {
-
             @Override
             public void commence(HttpServletRequest request, HttpServletResponse response,
                                  AuthenticationException authException) throws IOException, ServletException {
@@ -103,15 +99,12 @@ public class SecurityHandlerConfig {
     @Bean
     public LogoutSuccessHandler logoutSussHandler() {
         return new LogoutSuccessHandler() {
-
             @Override
             public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
                 ResponseInfo info = new ResponseInfo(true, "退出成功");
-
                 String token = TokenFilter.getToken(request);
                 tokenService.deleteToken(token);
-
                 ResponseUtil.responseJson(response, HttpStatus.OK.value(), info);
             }
         };

@@ -2,13 +2,18 @@ package com.rabbit.service.Impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.rabbit.model.po.GlobalVar;
 import org.springframework.stereotype.Service;
+
 import javax.annotation.Resource;
+
 import com.rabbit.dao.GlobalParamMapper;
 import com.rabbit.model.GlobalParam;
 import com.rabbit.service.GlobalParamService;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class GlobalParamServiceImpl implements GlobalParamService {
@@ -48,19 +53,59 @@ public class GlobalParamServiceImpl implements GlobalParamService {
     }
 
     @Override
-    public List<GlobalParam> findByParamNameAndProjectId(String paramName, Long projectId) {
-        return globalParamMapper.findByParamNameAndProjectId(paramName, projectId);
+    public List<GlobalParam> findByParamNameAndProjectIdAndType(String paramName, Long projectId, Integer type) {
+        return globalParamMapper.findByParamNameAndProjectIdAndType(paramName, projectId, type);
     }
 
     @Override
-    public List<GlobalParam> findByParamNameAndProjectIdAndIdNot(String paramName, Long projectId, Long notId) {
-        return globalParamMapper.findByParamNameAndProjectIdAndIdNot(paramName, projectId, notId);
+    public List<GlobalParam> findByParamNameAndProjectIdAndTypeAndIdNot(String paramName, Long projectId, Integer type, Long notId) {
+        return globalParamMapper.findByParamNameAndProjectIdAndTypeAndIdNot(paramName, projectId, type, notId);
     }
 
     @Override
     public int insert(GlobalParam record) {
         return globalParamMapper.insert(record);
     }
+
+    @Override
+    public Map<String, Object> findByProjectIdAndTypeAndEnvId(Long projectId, Integer type, Long envId) {
+        Map<String, Object> vars = new ConcurrentHashMap<String, Object>();
+        List<GlobalParam> globalParams = globalParamMapper.findByProjectIdAndType(projectId, type);
+        for (GlobalParam globalParam : globalParams) {
+            List<GlobalVar> envVars = globalParam.getEnvVars();
+            if (envVars != null) {
+                GlobalVar globalVar = envVars.stream().filter(ev -> ev.getEnvId() == envId).findFirst().orElse(null);
+                if (globalVar != null) {
+                    globalParam.setParamValue(globalVar.getValue());
+                }
+            }
+            if (globalParam.getParamType().equals(2)) {
+                try {
+                    vars.put(globalParam.getParamName(), Double.valueOf(globalParam.getParamValue()));
+                } catch (Exception e) {
+                    vars.put(globalParam.getParamName(), null);
+                }
+            } else if (globalParam.getParamType().equals(3)) {
+                try {
+                    vars.put(globalParam.getParamName(), Double.valueOf(globalParam.getParamValue()));
+                    if (globalParam.getParamValue().toLowerCase().equals("true")) {
+                        vars.put(globalParam.getParamName(), true);
+                    } else {
+                        vars.put(globalParam.getParamName(), false);
+                    }
+                } catch (Exception e) {
+                    vars.put(globalParam.getParamName(), null);
+                }
+            } else {
+                vars.put(globalParam.getParamName(), globalParam.getParamValue());
+            }
+        }
+        return vars;
+    }
 }
+
+
+
+
 
 

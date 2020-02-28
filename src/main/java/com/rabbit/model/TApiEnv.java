@@ -1,7 +1,9 @@
 package com.rabbit.model;
 
+import com.rabbit.model.po.GlobalVar;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import lombok.Data;
 
 @Data
@@ -32,7 +34,7 @@ public class TApiEnv implements Serializable {
     /**
      * 公共变量
      */
-    private String global;
+    private List<GlobalVar> global;
 
     /**
      * 类型 0接口自动化

@@ -49,6 +49,10 @@ public class UserController {
     @PostMapping
 //    @PreAuthorize("hasAuthority('sys:user:add')")
     public ResponseInfo saveUser(@RequestBody UserDto userDto) {
+        Long projectId = userDto.getProjectId();
+        if(projectId == null||projectId == -1){
+            return new ResponseInfo(false, new ErrorInfo(123,"请选择默认项目"));
+        }
         SysUser u = userService.getUser(userDto.getUsername());
         if (u != null) {
             throw new IllegalArgumentException(userDto.getUsername() + "已存在");
@@ -60,6 +64,10 @@ public class UserController {
     @PutMapping
 //    @PreAuthorize("hasAuthority('sys:user:add')")
     public ResponseInfo updateUser(@RequestBody UserDto userDto) {
+        Long projectId = userDto.getProjectId();
+        if(projectId == null||projectId == -1){
+            return new ResponseInfo(false, new ErrorInfo(123,"请选择默认项目"));
+        }
         return new ResponseInfo(true, userService.updateUser(userDto));
     }
 

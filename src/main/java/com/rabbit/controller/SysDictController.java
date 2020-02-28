@@ -34,7 +34,7 @@ public class SysDictController {
 
     @PostMapping("/addDict")
     public ResponseInfo savaDict(@RequestBody SysDict sysDict) {
-        List<SysDict> sysDicts = sysDictService.findByName(sysDict.getName());
+        List<SysDict> sysDicts = sysDictService.findByKey(sysDict.getKey());
         if (sysDicts.size() > 0) {
             return new ResponseInfo(false, new ErrorInfo(520, "数据字典【"+sysDict.getKey() + "】已存在"));
         }
@@ -60,6 +60,12 @@ public class SysDictController {
     @GetMapping("/uiActionList")
     public ResponseInfo getUiActionList() {
         List<SysDictDto> uiActions = sysDictService.findUiActions();
+        return new ResponseInfo(true, uiActions);
+    }
+
+    @GetMapping("/apiActionList")
+    public ResponseInfo getApiActionList() {
+        List<SysDictDto> uiActions = sysDictService.findApiActions();
         return new ResponseInfo(true, uiActions);
     }
 

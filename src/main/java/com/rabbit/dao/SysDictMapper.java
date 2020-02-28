@@ -18,8 +18,6 @@ public interface SysDictMapper {
     int updateByPrimaryKey(SysDict record);
 
     List<SysDict> findAll();
+    List<SysDict> findByKey(@Param("key")String key);
 
-    List<SysDict> findByName(@Param("name")String name);
-
-    List<SysDict> findAllByKey(@Param("key")String key);
 }

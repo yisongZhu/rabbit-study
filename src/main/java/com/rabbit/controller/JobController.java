@@ -8,12 +8,14 @@ import com.rabbit.dto.TestsuiteUiDto;
 import com.rabbit.model.*;
 import com.rabbit.service.IJobService;
 import com.rabbit.service.PlanBusinessUiService;
+import com.rabbit.service.TPlanSuiteApiService;
 import com.rabbit.service.TTestsuiteUiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -34,6 +36,9 @@ public class JobController {
 
     @Autowired
     private TPlanSuiteUiMapper planSuiteUiMapper;
+
+    @Resource
+    private TPlanSuiteApiService planSuiteApiService;
 
     @GetMapping("/list")
     public ResponseInfo list(@RequestParam(value = "pageNum") int pageNum, @RequestParam(value = "pageSize") int pageSize, @RequestParam(value = "serchData") String serchData) {
@@ -67,6 +72,8 @@ public class JobController {
             planBusinessUiService.deleteByJobId(job.getJobId());
         } else if (job.getJobType() != null && job.getJobType().equals(4)) {
             planSuiteUiMapper.deleteByJobId(job.getJobId());
+        } else if (job.getJobType() != null && job.getJobType().equals(3)) {
+            planSuiteApiService.deleteByJobId(job.getJobId());
         }
         jobService.deleteJob(job);
         return new ResponseInfo(true, "删除成功");
@@ -106,10 +113,10 @@ public class JobController {
             return new ResponseInfo(false, new ErrorInfo(300, "表达式错误"));
         }
         jobService.insertJobCron(job);
-        if (job.getJobType() != null && job.getJobType().equals(1)) {
-            planBusinessUiService.delAndAddListByJob(job);
-        } else if (job.getJobType() != null && job.getJobType().equals(4)) {
+        if (job.getJobType() != null && job.getJobType().equals(4)) {
             tTestsuiteUiService.addUiSuiteToPlan(job);
+        } else if (job.getJobType() != null && job.getJobType().equals(3)) {
+            planSuiteApiService.addApiSuiteToPlan(job);
         }
         return new ResponseInfo(true, "新增保存调度成功");
     }
@@ -124,11 +131,11 @@ public class JobController {
         if (!jobService.checkCronExpressionIsValid(job.getCronExpression())) {
             return new ResponseInfo(false, new ErrorInfo(520, "表达式错误"));
         }
-        log.info("修改定时任务==={}",job);
-        if (job.getJobType() != null && job.getJobType().equals(1)) {
-            planBusinessUiService.delAndAddListByJob(job);
-        } else if (job.getJobType() != null && job.getJobType().equals(4)) {
+        log.info("修改定时任务==={}", job);
+    if (job.getJobType() != null && job.getJobType().equals(4)) {
             tTestsuiteUiService.addUiSuiteToPlan(job);
+        }else if (job.getJobType() != null && job.getJobType().equals(3)) {
+            planSuiteApiService.addApiSuiteToPlan(job);
         }
         jobService.updateJobCron(job);
         return new ResponseInfo(true, "修改保存调度成功");

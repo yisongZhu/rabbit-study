@@ -34,4 +34,5 @@ public interface ClientMapper {
     List<Client> selectByClientIpAndClientPort(@Param("clientIp") String clientIp, @Param("clientPort") Integer clientPort);
 
     int updateByClientIpAndClientPort(@Param("updated") Client updated, @Param("clientIp") String clientIp, @Param("clientPort") Integer clientPort);
+
 }

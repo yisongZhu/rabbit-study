@@ -2,19 +2,22 @@ package com.rabbit.service.Impl;
 
 import com.rabbit.dao.TApiMapper;
 import com.rabbit.dto.TApiSuiteDto;
-import com.rabbit.service.TApiService;
+import com.rabbit.model.*;
+import com.rabbit.service.RequestExecutorServer;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
 import com.rabbit.dao.TApiSuiteMapper;
-import com.rabbit.model.TApiSuite;
 import com.rabbit.service.TApiSuiteService;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
+@Slf4j
 @Service
 public class TApiSuiteServiceImpl implements TApiSuiteService {
 
@@ -23,6 +26,9 @@ public class TApiSuiteServiceImpl implements TApiSuiteService {
 
     @Autowired
     private TApiMapper tApiMapper;
+
+
+
 
     @Override
     @Transactional
@@ -55,6 +61,7 @@ public class TApiSuiteServiceImpl implements TApiSuiteService {
     public int updateByPrimaryKey(TApiSuite record) {
         return tApiSuiteMapper.updateByPrimaryKey(record);
     }
+
     @Override
     public List<TApiSuiteDto> findDtoByProjectId(Long projectId) {
         List<TApiSuiteDto> byProjectId = tApiSuiteMapper.findByProjectId(projectId);
@@ -63,16 +70,20 @@ public class TApiSuiteServiceImpl implements TApiSuiteService {
         }
         return byProjectId;
     }
+
     @Override
     public List<TApiSuite> findByNameAndProjectId(String name, Long projectId) {
         return tApiSuiteMapper.findByNameAndProjectId(name, projectId);
     }
+
     @Override
     public List<TApiSuite> findByNameAndProjectIdAndIdNot(String name, Long projectId, Long notId) {
         return tApiSuiteMapper.findByNameAndProjectIdAndIdNot(name, projectId, notId);
     }
+
     @Override
     public List<TApiSuiteDto> findByProjectId(Long projectId) {
         return tApiSuiteMapper.findByProjectId(projectId);
     }
+
 }

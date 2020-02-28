@@ -1,9 +1,13 @@
 package com.rabbit.service;
 
 import com.github.pagehelper.PageInfo;
+import com.rabbit.model.Result;
 import com.rabbit.model.TApi;
+import com.rabbit.model.TApiResult;
+import com.rabbit.model.po.Action;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TApiService {
 
@@ -27,7 +31,20 @@ public interface TApiService {
     List<TApi> findByNameAndProjectId(String name, Long projectId);
 
     List<TApi> findByNameAndProjectIdAndIdNot(String name, Long projectId, Long notId);
+
+    Result runAction(Action action, Map<String, Object> gVars, Map<String, Object> caseVars);
+
+    TApiResult excApi(TApi api, Map<String, Object> gVars, Map<String, Object> caseVars);
 }
+
+
+
+
+
+
+
+
+
 
 
 

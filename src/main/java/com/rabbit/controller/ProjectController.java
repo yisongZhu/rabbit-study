@@ -6,6 +6,7 @@ import com.rabbit.model.ErrorInfo;
 import com.rabbit.model.Project;
 import com.rabbit.model.ResponseInfo;
 import com.rabbit.service.ProjectService;
+import com.rabbit.utils.FastJSONHelper;
 import com.rabbit.utils.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +33,7 @@ public class ProjectController {
 
     @GetMapping("/listPage")
     public ResponseInfo getPageList(@RequestParam(value = "pageNum") int pageNum, @RequestParam(value = "pageSize") int pageSize, @RequestParam(value = "serchData") String serchData) {
-        JSONObject jsonObject = JSONObject.parseObject(serchData);
-        Project project = JSONObject.toJavaObject(jsonObject, Project.class);
+        Project project = FastJSONHelper.deserialize(serchData,Project.class);
         PageInfo pageInfo = projectService.findByAllwithPage(pageNum, pageSize, project);
         return new ResponseInfo(true, pageInfo);
     }

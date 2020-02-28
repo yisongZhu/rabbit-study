@@ -49,13 +49,16 @@ public class SysDictServiceImpl implements SysDictService {
     }
 
     @Override
-    public List<SysDict> findByName(String name) {
-        return sysDictMapper.findByName(name);
-    }
-
-    @Override
     public List<SysDictDto> findUiActions() {
         return sysDictDtoMapper.findUiActions();
+    }
+    @Override
+    public List<SysDict> findByKey(String key) {
+        return sysDictMapper.findByKey(key);
+    }
+    @Override
+    public List<SysDictDto> findApiActions() {
+        return sysDictDtoMapper.findApiActions();
     }
 }
 

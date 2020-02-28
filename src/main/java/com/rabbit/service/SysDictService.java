@@ -17,9 +17,11 @@ public interface SysDictService {
 
     List<SysDict> findAll();
 
-    List<SysDict> findByName(String name);
-
     List<SysDictDto> findUiActions();
+
+    List<SysDict> findByKey(String key);
+
+    List<SysDictDto> findApiActions();
 }
 
 

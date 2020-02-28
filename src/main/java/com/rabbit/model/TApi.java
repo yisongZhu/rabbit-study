@@ -1,7 +1,14 @@
 package com.rabbit.model;
 
+import com.rabbit.model.po.Action;
+import com.rabbit.model.po.Assert;
+import com.rabbit.model.po.BodyData;
+import com.rabbit.model.po.Extract;
+import com.rabbit.model.po.Header;
+import com.rabbit.model.po.Query;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import lombok.Data;
 
 @Data
@@ -42,9 +49,9 @@ public class TApi implements Serializable {
     private Long envId;
 
     /**
-     * 请求ip或者域名
+     * 请求的协议+域名
      */
-    private String host;
+    private String domain;
 
     /**
      * 请求路径
@@ -67,19 +74,24 @@ public class TApi implements Serializable {
     private Integer status;
 
     /**
+     * 前置处理器
+     */
+    private List<Action> beforeExcs;
+
+    /**
      * 请求头
      */
-    private String reqHeader;
+    private List<Header> reqHeader;
 
     /**
      * 请求query
      */
-    private String reqQuery;
+    private List<Query> reqQuery;
 
     /**
      * 请求body from-data格式
      */
-    private String reqBodyData;
+    private List<BodyData> reqBodyData;
 
     /**
      * 请求body json格式
@@ -94,12 +106,12 @@ public class TApi implements Serializable {
     /**
      * 请求提取参数
      */
-    private String reqExtract;
+    private List<Extract> reqExtract;
 
     /**
      * 请求断言
      */
-    private String reqAssert;
+    private List<Assert> reqAssert;
 
     /**
      * 调试响应对象

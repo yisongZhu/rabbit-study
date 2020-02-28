@@ -1,6 +1,9 @@
 package com.rabbit.dao;
 
-import com.rabbit.model.GlobalParam;import org.apache.ibatis.annotations.Param;import java.util.List;
+import com.rabbit.model.GlobalParam;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface GlobalParamMapper {
     int deleteByPrimaryKey(Long id);
@@ -17,7 +20,9 @@ public interface GlobalParamMapper {
 
     List<GlobalParam> findByAll(GlobalParam globalParam);
 
-    List<GlobalParam> findByParamNameAndProjectId(@Param("paramName") String paramName, @Param("projectId") Long projectId);
+    List<GlobalParam> findByParamNameAndProjectIdAndType(@Param("paramName") String paramName, @Param("projectId") Long projectId, @Param("type") Integer type);
 
-    List<GlobalParam> findByParamNameAndProjectIdAndIdNot(@Param("paramName") String paramName, @Param("projectId") Long projectId, @Param("notId") Long notId);
+    List<GlobalParam> findByParamNameAndProjectIdAndTypeAndIdNot(@Param("paramName") String paramName, @Param("projectId") Long projectId, @Param("type") Integer type, @Param("notId") Long notId);
+
+    List<GlobalParam> findByProjectIdAndType(@Param("projectId") Long projectId, @Param("type") Integer type);
 }

@@ -3,10 +3,7 @@ package com.rabbit.service.Impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.rabbit.common.constant.ScheduleConstants;
-import com.rabbit.dao.JobMapper;
-import com.rabbit.dao.TPlanSuiteUiMapper;
-import com.rabbit.dao.TTestsuiteUiMapper;
-import com.rabbit.dao.TestbusinessUiDtoMapper;
+import com.rabbit.dao.*;
 import com.rabbit.dto.JobDto;
 import com.rabbit.model.Job;
 import com.rabbit.service.IJobService;
@@ -21,11 +18,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
  * 定时任务调度信息 服务层
- *
  */
 @Service
 public class JobServiceImpl implements IJobService {
@@ -37,10 +34,10 @@ public class JobServiceImpl implements IJobService {
     private JobMapper jobMapper;
 
     @Autowired
-    private TestbusinessUiDtoMapper testbusinessUiDtoMapper;
-
-    @Autowired
     private TTestsuiteUiMapper testsuiteUiMapper;
+
+    @Resource
+    private TPlanSuiteApiMapper planSuiteApiMapper;
 
     /**
      * 项目启动时，初始化定时器
@@ -82,9 +79,6 @@ public class JobServiceImpl implements IJobService {
     public PageInfo selectCustomJobListPage(int pageNum, int pageSize, Job job) {
         PageHelper.startPage(pageNum, pageSize);
         List<JobDto> list = jobMapper.selectCustomJobList(job);
-        for (JobDto job1:list){
-            job1.setBusinessList(testbusinessUiDtoMapper.findDtoByJobId(job1.getJobId()));
-        }
         PageInfo page = new PageInfo(list);
         return page;
     }
@@ -98,10 +92,10 @@ public class JobServiceImpl implements IJobService {
     @Override
     public JobDto selectJobById(Long jobId) {
         JobDto jobDto = jobMapper.selectJobById(jobId);
-        if(jobDto.getJobType().equals(1)){
-            jobDto.setBusinessList(testbusinessUiDtoMapper.findDtoByJobId(jobDto.getJobId()));
-        }else if (jobDto.getJobType().equals(4)){
+        if (jobDto.getJobType().equals(4)) {
             jobDto.setSuiteList(testsuiteUiMapper.findDtoByJobId(jobId));
+        } else if (jobDto.getJobType().equals(3)) {
+            jobDto.setApiSuiteList(planSuiteApiMapper.findDtoByJobId(jobId));
         }
         return jobDto;
     }

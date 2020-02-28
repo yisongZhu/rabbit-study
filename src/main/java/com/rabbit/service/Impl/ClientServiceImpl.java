@@ -125,7 +125,7 @@ public class ClientServiceImpl implements ClientService {
         for (Map.Entry<String, Client> entry : onlineClient.entrySet()) {
             Client value = entry.getValue();
             try {
-                Client clientInfo = clientFactory.clientTestService(value.getClientIp(), value.getClientPort()).getClientInfo();
+                clientFactory.clientTestService(value.getClientIp(), value.getClientPort()).getClientInfo();
             } catch (Exception e) {
                 value.setStatus(2);
                 clientMapper.updateByPrimaryKeySelective(value);

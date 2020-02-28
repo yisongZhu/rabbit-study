@@ -48,7 +48,6 @@ public class SendMailSeviceImpl implements SendMailSevice {
             helper.setSubject(subject);
 //			helper.addAttachment("附件",new File("H:/tup"));
             helper.setText(text, true);
-
             javaMailSender.send(message);
         } catch (MessagingException e) {
             e.printStackTrace();

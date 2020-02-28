@@ -2,8 +2,10 @@ package com.rabbit.service.Impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.rabbit.dao.TTestcaseApiMapper;
 import com.rabbit.dao.TestcaseUiDtoMapper;
 import com.rabbit.dto.TestcaseUiDto;
+import com.rabbit.model.TTestcaseApi;
 import com.rabbit.service.StepUiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,8 @@ public class TestcaseUiServiceImpl implements TestcaseUiService {
     private StepUiService stepUiService;
     @Autowired
     private TestcaseUiDtoMapper testcaseUiDtoMapper;
+    @Autowired
+    private TTestcaseApiMapper tTestcaseApiMapper;
 
     @Override
     public int deleteByPrimaryKey(Long id) {
@@ -80,5 +84,6 @@ public class TestcaseUiServiceImpl implements TestcaseUiService {
     public Long countByBusinessId(Long businessId) {
         return testcaseUiDtoMapper.countByBusinessId(businessId);
     }
+
 }
 

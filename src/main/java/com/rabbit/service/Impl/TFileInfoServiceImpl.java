@@ -133,6 +133,22 @@ public class TFileInfoServiceImpl implements TFileInfoService {
         }
     }
 
+    @Override
+    public String getAbsolutePath(int sourceType, Long sourceId, String fileName) {
+        TFileInfo tFileInfo = new TFileInfo();
+        tFileInfo.setSourceType(sourceType);
+        tFileInfo.setSourceId(sourceId);
+        tFileInfo.setName(fileName);
+        List<TFileInfo> byAll = findByAll(tFileInfo);
+        if (byAll.size() > 0) {
+            TFileInfo fileInfo = byAll.get(0);
+            return RabbitConfig.systemfile + fileInfo.getPath();
+        } else {
+            return null;
+        }
+    }
+
+
 }
 
 

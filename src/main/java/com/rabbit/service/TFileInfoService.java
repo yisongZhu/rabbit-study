@@ -12,7 +12,9 @@ public interface TFileInfoService {
 
 
     int deleteByPrimaryKey(Long id);
+
     int deleteBySourceTypeAndSourceId(Integer sourceType, Long sourceId);
+
     TFileInfo selectByPrimaryKey(Long id);
 
     int updateByPrimaryKeySelective(TFileInfo record);
@@ -29,7 +31,9 @@ public interface TFileInfoService {
 
     List<TFileInfo> findByAll(TFileInfo tFileInfo);
 
-    byte[]  getFileByte(int sourceType, Long sourceId, String fileName);
+    byte[] getFileByte(int sourceType, Long sourceId, String fileName);
+
+    String getAbsolutePath(int sourceType, Long sourceId, String fileName);
 }
 
 

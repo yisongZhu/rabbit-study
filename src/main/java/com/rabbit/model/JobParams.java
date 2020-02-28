@@ -13,7 +13,7 @@ public class JobParams implements Serializable  {
 
 	private static final long serialVersionUID = 1L;
 	private Long id;
-//	private Integer jobId;
+	private Integer envId;//环境id
 	private Long clientId;//客户端IP
 	private String  browserType;
 	private Integer isSendEmail;//执行完毕是否发送邮件

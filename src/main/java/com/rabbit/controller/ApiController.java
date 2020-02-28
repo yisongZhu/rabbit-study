@@ -1,22 +1,21 @@
 package com.rabbit.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.rabbit.dto.ApiDto;
 import com.rabbit.model.*;
-import com.rabbit.service.TApiEnvService;
+import com.rabbit.service.GlobalParamService;
 import com.rabbit.service.TApiService;
 import com.rabbit.service.TApiSuiteService;
 import com.rabbit.utils.FastJSONHelper;
 import com.rabbit.utils.UserUtil;
-import com.rabbit.utils.apitest.RequestExecutor;
-import io.restassured.response.Response;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @RestController
@@ -24,14 +23,14 @@ import java.util.List;
 @Api(tags = "api相关接口")
 public class ApiController {
 
-    @Autowired
+    @Resource
     private TApiService tApiService;
 
-    @Autowired
+    @Resource
     private TApiSuiteService tApiSuiteService;
 
-    @Autowired
-    private TApiEnvService tApiEnvService;
+    @Resource
+    private GlobalParamService globalParamService;
 
     @GetMapping("/listPage")
     @ApiOperation(value = "获取分页带参列表")
@@ -131,17 +130,16 @@ public class ApiController {
 
     @PostMapping("/debug")
     @ApiOperation(value = "调试api")
-    public ResponseInfo debugTApi(@RequestBody ApiDto apiDto) {
-        TApiEnv tApiEnv = tApiEnvService.selectByPrimaryKey(apiDto.getEnvId());
-        apiDto.setPrepend(tApiEnv.getPrepend());
-        apiDto.setDomain(tApiEnv.getDomain());
-        apiDto.setGlobal(tApiEnv.getGlobal());
+    public ResponseInfo debugTApi(@RequestBody TApi api) {
+        Map<String, Object> gVars = globalParamService.findByProjectIdAndTypeAndEnvId(api.getProjectId(), 2, api.getEnvId());
+        Map<String, Object> caseVars = new ConcurrentHashMap<>();
         try {
-            ApiResult apiResult = new RequestExecutor(apiDto).executeHttpRequest();
-            return new ResponseInfo(true, apiResult);
-        }catch (Exception e){
-           log.error("debug出错：",e);
-            return new ResponseInfo(false,new ErrorInfo(12,e.getMessage()));
+//            ApiResult apiResult = new RequestExecutor(api, gVars, caseVars).executeHttpRequest();
+            TApiResult TApiResult = tApiService.excApi(api, gVars, caseVars);
+            return new ResponseInfo(true, TApiResult);
+        } catch (Exception e) {
+            log.error("debug出错：", e);
+            return new ResponseInfo(false, new ErrorInfo(12, e.getMessage()));
         }
     }
 }

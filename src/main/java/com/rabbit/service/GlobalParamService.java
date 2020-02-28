@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.rabbit.model.GlobalParam;
 
 import java.util.List;
+import java.util.Map;
 
 public interface GlobalParamService {
 
@@ -20,11 +21,17 @@ public interface GlobalParamService {
 
     PageInfo<GlobalParam> findByAllwithPage(int page, int pageSize, GlobalParam globalParam);
 
-    List<GlobalParam> findByParamNameAndProjectId(String paramName, Long projectId);
+    List<GlobalParam> findByParamNameAndProjectIdAndType(String paramName, Long projectId, Integer type);
 
-    List<GlobalParam> findByParamNameAndProjectIdAndIdNot(String paramName, Long projectId, Long notId);
+    List<GlobalParam> findByParamNameAndProjectIdAndTypeAndIdNot(String paramName, Long projectId, Integer type, Long notId);
 
     int insert(GlobalParam record);
+
+    Map<String, Object> findByProjectIdAndTypeAndEnvId(Long projectId, Integer type, Long envId);
 }
+
+
+
+
 
 

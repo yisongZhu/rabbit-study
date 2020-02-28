@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.rabbit.model.GlobalParam;
 import com.rabbit.model.ErrorInfo;
 import com.rabbit.model.ResponseInfo;
+import com.rabbit.model.po.GlobalVar;
 import com.rabbit.service.GlobalParamService;
 import com.rabbit.utils.UserUtil;
 import io.swagger.annotations.Api;
@@ -40,7 +41,13 @@ public class GlobalParameController {
     @PostMapping("/add")
     @ApiOperation(value = "新增")
     public ResponseInfo savaGlobalParam(@RequestBody GlobalParam globalParam) {
-        List<GlobalParam> globalParams = globalParamService.findByParamNameAndProjectId(globalParam.getParamName(), globalParam.getProjectId());
+        List<GlobalVar> envVars = globalParam.getEnvVars();
+        for (GlobalVar globalVar : envVars) {
+            if (globalVar.getEnvId() == null) {
+                return new ResponseInfo(false, new ErrorInfo(500, "参数环境不能为空"));
+            }
+        }
+        List<GlobalParam> globalParams = globalParamService.findByParamNameAndProjectIdAndType(globalParam.getParamName(), globalParam.getProjectId(), globalParam.getType());
         if (globalParams.size() > 0) {
             return new ResponseInfo(false, new ErrorInfo(520, "公共参数【" + globalParam.getParamName() + "】已存在"));
         }
@@ -53,7 +60,13 @@ public class GlobalParameController {
     @PutMapping("/edit")
     @ApiOperation(value = "编辑")
     public ResponseInfo editGlobalParam(@RequestBody GlobalParam globalParam) {
-        List<GlobalParam> globalParams = globalParamService.findByParamNameAndProjectIdAndIdNot(globalParam.getParamName(), globalParam.getProjectId(), globalParam.getId());
+        List<GlobalVar> envVars = globalParam.getEnvVars();
+        for (GlobalVar globalVar : envVars) {
+            if (globalVar.getEnvId() == null) {
+                return new ResponseInfo(false, new ErrorInfo(500, "参数环境不能为空"));
+            }
+        }
+        List<GlobalParam> globalParams = globalParamService.findByParamNameAndProjectIdAndTypeAndIdNot(globalParam.getParamName(), globalParam.getProjectId(), globalParam.getType(), globalParam.getId());
         if (globalParams.size() > 0) {
             return new ResponseInfo(false, new ErrorInfo(520, "公共参数【" + globalParam.getParamName() + "】已存在"));
         }

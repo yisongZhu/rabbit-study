@@ -1,11 +1,6 @@
 package com.rabbit.dao;
 
-import com.rabbit.dto.ApiDto;
-import com.rabbit.model.TApi;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-
-import java.util.List;
+import com.rabbit.model.TApi;import org.apache.ibatis.annotations.Param;import java.util.List;
 
 public interface TApiMapper {
     int deleteByPrimaryKey(Long id);
@@ -31,7 +26,4 @@ public interface TApiMapper {
     List<TApi> findByApiSuiteId(@Param("apiSuiteId") Long apiSuiteId);
 
     int deleteByApiSuiteId(@Param("apiSuiteId") Long apiSuiteId);
-
-    @Select("SELECT t.*,te.prepend,te.domain,te.global FROM t_api t LEFT JOIN t_api_env te ON t.env_id = te.id AND t.id =  #{id}")
-    ApiDto getDtoById(Long id);
 }

@@ -47,21 +47,5 @@ public class PlanBusinessUiServiceImpl implements PlanBusinessUiService {
     public int insertList(List<PlanBusinessUi> list) {
         return planBusinessUiMapper.insertList(list);
     }
-
-    @Override
-    public void delAndAddListByJob(JobDto job) {
-        List<TestbusinessUiDto> businessList = job.getBusinessList();
-        if (businessList.size() > 0) {
-            deleteByJobId(job.getJobId());
-            for (TestbusinessUiDto business : businessList) {
-                PlanBusinessUi planBusinessUi = new PlanBusinessUi();
-                planBusinessUi.setJobId(job.getJobId());
-                planBusinessUi.setBusinessId(business.getId());
-                planBusinessUi.setSort(business.getSort());
-                planBusinessUi.setIsValid(business.getIsValid());
-                insertSelective(planBusinessUi);
-            }
-        }
-    }
 }
 

@@ -9,8 +9,8 @@ import java.util.List;
 
 @Data
 public class JobDto extends Job {
-	private static final long serialVersionUID = 1L;
-	private List<TestbusinessUiDto> businessList;
-	private List<TestsuiteUiDto> suiteList;
-	private JobParams jobParams;//请求参数
+    private static final long serialVersionUID = 1L;
+    private List<TestsuiteUiDto> suiteList;
+    private List<TPlanSuiteApiDto> apiSuiteList;
+    private JobParams jobParams;//请求参数
 }

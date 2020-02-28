@@ -20,7 +20,5 @@ public interface PlanBusinessUiService {
 
     int insertList(List<PlanBusinessUi> list);
 
-    void delAndAddListByJob(JobDto jobDto);
-
 }
 
