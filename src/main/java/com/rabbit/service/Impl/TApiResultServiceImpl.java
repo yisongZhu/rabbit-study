@@ -1,10 +1,14 @@
 package com.rabbit.service.Impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import com.rabbit.model.TApiResult;
 import com.rabbit.dao.TApiResultMapper;
 import com.rabbit.service.TApiResultService;
+
+import java.util.List;
 
 @Service
 public class TApiResultServiceImpl implements TApiResultService {
@@ -42,7 +46,13 @@ public class TApiResultServiceImpl implements TApiResultService {
         return tApiResultMapper.updateByPrimaryKey(record);
     }
 
+    @Override
+    public List<TApiResult> findByAll(TApiResult tApiResult) {
+        return tApiResultMapper.findByAll(tApiResult);
+    }
 }
+
+
 
 
 

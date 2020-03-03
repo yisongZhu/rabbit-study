@@ -4,10 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.rabbit.dao.TPlanSuiteUiMapper;
 import com.rabbit.dto.JobDto;
-import com.rabbit.dto.TestsuiteUiDto;
 import com.rabbit.model.*;
 import com.rabbit.service.IJobService;
-import com.rabbit.service.PlanBusinessUiService;
 import com.rabbit.service.TPlanSuiteApiService;
 import com.rabbit.service.TTestsuiteUiService;
 import lombok.extern.slf4j.Slf4j;
@@ -29,13 +27,7 @@ public class JobController {
     private IJobService jobService;
 
     @Autowired
-    private PlanBusinessUiService planBusinessUiService;
-
-    @Autowired
     private TTestsuiteUiService tTestsuiteUiService;
-
-    @Autowired
-    private TPlanSuiteUiMapper planSuiteUiMapper;
 
     @Resource
     private TPlanSuiteApiService planSuiteApiService;
@@ -68,13 +60,6 @@ public class JobController {
     @PostMapping("/remove")
     @Transactional
     public ResponseInfo remove(@RequestBody JobDto job) {
-        if (job.getJobType() != null && job.getJobType().equals(1)) {
-            planBusinessUiService.deleteByJobId(job.getJobId());
-        } else if (job.getJobType() != null && job.getJobType().equals(4)) {
-            planSuiteUiMapper.deleteByJobId(job.getJobId());
-        } else if (job.getJobType() != null && job.getJobType().equals(3)) {
-            planSuiteApiService.deleteByJobId(job.getJobId());
-        }
         jobService.deleteJob(job);
         return new ResponseInfo(true, "删除成功");
     }
@@ -132,9 +117,9 @@ public class JobController {
             return new ResponseInfo(false, new ErrorInfo(520, "表达式错误"));
         }
         log.info("修改定时任务==={}", job);
-    if (job.getJobType() != null && job.getJobType().equals(4)) {
+        if (job.getJobType() != null && job.getJobType().equals(4)) {
             tTestsuiteUiService.addUiSuiteToPlan(job);
-        }else if (job.getJobType() != null && job.getJobType().equals(3)) {
+        } else if (job.getJobType() != null && job.getJobType().equals(3)) {
             planSuiteApiService.addApiSuiteToPlan(job);
         }
         jobService.updateJobCron(job);

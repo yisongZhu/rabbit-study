@@ -1,7 +1,6 @@
 package com.rabbit.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.rabbit.dto.StepApiDto;
 import com.rabbit.dto.TApiCaseResultDto;
 import com.rabbit.dto.TestcaseApiDto;
 import com.rabbit.model.*;
@@ -30,8 +29,6 @@ public class ApiTestCaseController {
     private TTestcaseApiService testcaseApiService;
     @Resource
     private TStepApiService stepApiService;
-    @Resource
-    private GlobalParamService globalParamService;
 
     @GetMapping("/listPage")
     @ApiOperation(value = "获取分页带参列表")
@@ -113,11 +110,8 @@ public class ApiTestCaseController {
     @PostMapping("/debug")
     @ApiOperation(value = "debug用例")
     public ResponseInfo debug(@RequestBody TestcaseApiDto testcaseApi) {
-        Map<String, Object> gVars = globalParamService.findByProjectIdAndTypeAndEnvId(testcaseApi.getProjectId(), 2, testcaseApi.getEnvId());
-        Map<String, Object> caseVars = new ConcurrentHashMap<>();
-
         try {
-            TApiCaseResultDto apiCaseResultDto = testcaseApiService.debug(testcaseApi, gVars, caseVars);
+            TApiCaseResultDto apiCaseResultDto = testcaseApiService.excCase(testcaseApi);
             return new ResponseInfo(true, apiCaseResultDto);
         } catch (Exception e) {
             log.error("debug出错：", e);

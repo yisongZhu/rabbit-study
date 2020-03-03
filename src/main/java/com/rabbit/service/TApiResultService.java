@@ -1,6 +1,9 @@
 package com.rabbit.service;
 
+import com.github.pagehelper.PageInfo;
 import com.rabbit.model.TApiResult;
+
+import java.util.List;
 
 public interface TApiResultService {
 
@@ -17,7 +20,10 @@ public interface TApiResultService {
 
     int updateByPrimaryKey(TApiResult record);
 
+    List<TApiResult> findByAll(TApiResult tApiResult);
 }
+
+
 
 
 

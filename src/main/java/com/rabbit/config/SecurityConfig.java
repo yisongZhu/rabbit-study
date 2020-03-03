@@ -52,8 +52,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //				.antMatchers("/", "/*.html", "/favicon.ico", "/css/**", "/js/**", "/fonts/**", "/img/**",
 //					"/v2/api-docs/**", "/swagger-resources/**", "/webjars/**", "/pages/**", "/monitor/druid/**",
 //					"/statics/**", "/static/**/*","/userTest/**","/hessian/**")
-                .antMatchers("/","/v2/api-docs/**","/swagger-resources/**","/webjars/**", "/swagger-ui.html", "/v2/api-docs/**", "/monitor/druid/**",
-                        "/static/**/*", "/userTest/**", "/hessian/**","/profile/**","/springboot-admin/**","/device/**")
+                .antMatchers("/", "/v2/api-docs/**", "/swagger-resources/**",
+                        "/webjars/**", "/swagger-ui.html", "/v2/api-docs/**", "/monitor/druid/**",
+                        "/static/**/*", "/userTest/**", "/hessian/**", "/profile/**",
+                        "/springboot-admin/**", "/device/**", "/job/run/**")
                 .permitAll().anyRequest().authenticated();
         http.formLogin().loginProcessingUrl("/login")
                 .successHandler(authenticationSuccessHandler).failureHandler(authenticationFailureHandler).and()

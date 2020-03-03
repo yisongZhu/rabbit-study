@@ -1,5 +1,7 @@
 package com.rabbit.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.rabbit.dao.TApiResultMapper;
 import com.rabbit.model.po.AssertResult;
 import com.rabbit.model.po.BodyData;
 import com.rabbit.model.po.ExtractResult;
@@ -9,15 +11,18 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Data
 public class TApiResult implements Serializable {
     private Long id;
 
+    private Long planLogId;
+
     /**
      * 用例结果id
      */
-    private Integer caseResultId;
+    private Long caseResultId;
 
     /**
      * 步骤id
@@ -40,7 +45,7 @@ public class TApiResult implements Serializable {
     private String reqMethod;
 
     /**
-     * 请求类型
+     * 请求url
      */
     private String reqUrl;
 
@@ -110,7 +115,7 @@ public class TApiResult implements Serializable {
     private Long rspTime;
 
     private String exception;
-
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     private Date createTime;
 
     private static final long serialVersionUID = 1L;

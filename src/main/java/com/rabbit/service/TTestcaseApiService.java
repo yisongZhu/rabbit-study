@@ -3,6 +3,7 @@ package com.rabbit.service;
 import com.github.pagehelper.PageInfo;
 import com.rabbit.dto.TApiCaseResultDto;
 import com.rabbit.dto.TestcaseApiDto;
+import com.rabbit.model.TApiCaseResult;
 import com.rabbit.model.TTestcaseApi;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public interface TTestcaseApiService {
 
     TestcaseApiDto selectDtoByIdAndCaseType(Long id, Integer caseType);
 
-    TApiCaseResultDto debug(TestcaseApiDto testcaseApi, Map<String, Object> gVars, Map<String, Object> caseVars);
+    TApiCaseResultDto excCase(TestcaseApiDto testcaseApi);
 
     List<TTestcaseApi> findBySuiteId(Long id);
 

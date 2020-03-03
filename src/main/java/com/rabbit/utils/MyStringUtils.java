@@ -42,7 +42,7 @@ public class MyStringUtils {
             Object varValue = map.get(varKey) == null ? varKey : map.get(varKey).toString();
 //            System.out.println(escapeExprSpecialWord(varKey));
             try {
-                string = string.replaceAll("\\$\\{" + escapeExprSpecialWord(varKey) + "\\}", varValue.toString());
+                string = string.replaceAll("\\$\\{" + escapeExprSpecialWord(varKey) + "\\}", escapeExprSpecialWord(varValue.toString()));
             } catch (Exception e) {
                 continue;
             }
@@ -65,7 +65,7 @@ public class MyStringUtils {
             Object varValue = map.get(varKey) == null ? varKey : map.get(varKey).toString();
 //            System.out.println(escapeExprSpecialWord(varKey));
             try {
-                string = string.replaceAll("\\@\\{" + escapeExprSpecialWord(varKey) + "\\}", varValue.toString());
+                string = string.replaceAll("\\@\\{" + escapeExprSpecialWord(varKey) + "\\}", escapeExprSpecialWord(varValue.toString()));
             } catch (Exception e) {
                 continue;
             }
@@ -79,7 +79,7 @@ public class MyStringUtils {
 
     public static String escapeExprSpecialWord(String keyword) {
         if (StringUtils.isNotBlank(keyword)) {
-            String[] fbsArr = {"\\", "$", "(", ")", "*", "+", ".", "[", "]", "?", "^", "{", "}", "|"};
+            String[] fbsArr = {"\\",  "$", "(", ")", "*", "+", ".", "[", "]", "?", "^", "{", "}", "|"};
             for (String key : fbsArr) {
                 if (keyword.contains(key)) {
                     keyword = keyword.replace(key, "\\" + key);

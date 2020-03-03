@@ -78,6 +78,7 @@ public class NetUtil {
                         && !addr.isLoopbackAddress()
 //                        && !hostAddress.startsWith("192.168")
                         && !hostAddress.startsWith("172.")
+                        && !hostAddress.startsWith("127.0.0.1")
                         && !hostAddress.startsWith("169.")) {
                     if (addr.isSiteLocalAddress()) {
                         siteLocalAddress = hostAddress;

@@ -7,6 +7,7 @@ import com.rabbit.dao.*;
 import com.rabbit.dto.JobDto;
 import com.rabbit.model.Job;
 import com.rabbit.service.IJobService;
+import com.rabbit.service.TPlanSuiteApiService;
 import com.rabbit.utils.Convert;
 import com.rabbit.utils.CronUtils;
 import com.rabbit.utils.ScheduleUtils;
@@ -16,6 +17,7 @@ import org.quartz.Scheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -38,6 +40,11 @@ public class JobServiceImpl implements IJobService {
 
     @Resource
     private TPlanSuiteApiMapper planSuiteApiMapper;
+    @Autowired
+    private TPlanSuiteUiMapper planSuiteUiMapper;
+
+    @Resource
+    private TPlanSuiteApiService planSuiteApiService;
 
     /**
      * 项目启动时，初始化定时器
@@ -138,7 +145,13 @@ public class JobServiceImpl implements IJobService {
      * @param job 调度信息
      */
     @Override
+    @Transactional
     public int deleteJob(Job job) {
+        if (job.getJobType() != null && job.getJobType().equals(4)) {
+            planSuiteUiMapper.deleteByJobId(job.getJobId());
+        } else if (job.getJobType() != null && job.getJobType().equals(3)) {
+            planSuiteApiService.deleteByJobId(job.getJobId());
+        }
         int rows = jobMapper.deleteJobById(job.getJobId());
         if (rows > 0) {
             ScheduleUtils.deleteScheduleJob(scheduler, job.getJobId());

@@ -1,20 +1,29 @@
 package com.rabbit.service;
 
 import java.util.Date;
+import java.util.List;
+
+import com.github.pagehelper.PageInfo;
 import com.rabbit.model.TApiCaseResult;
-public interface TApiCaseResultService{
 
+public interface TApiCaseResultService {
 
-    int deleteByPrimaryKey(Long id,Date createTime);
 
     int insert(TApiCaseResult record);
 
     int insertSelective(TApiCaseResult record);
 
-    TApiCaseResult selectByPrimaryKey(Long id,Date createTime);
-
     int updateByPrimaryKeySelective(TApiCaseResult record);
 
     int updateByPrimaryKey(TApiCaseResult record);
 
+    int deleteByPrimaryKey(Long id);
+
+    TApiCaseResult selectByPrimaryKey(Long id);
+    List<TApiCaseResult> findByAll(TApiCaseResult tApiCaseResult);
 }
+
+
+
+
+

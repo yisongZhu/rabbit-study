@@ -51,7 +51,10 @@ public class RequestExecutorImpl implements RequestExecutorServer {
         trustAllHosts(requestSpecification);
         applyHeaders(requestSpecification, tApi, gVars, caseVars, TApiResult);
         applyQueryParameters(requestSpecification, tApi, gVars, caseVars, TApiResult);
+        log.info("getDomain:{},gVars:{}",tApi.getDomain(),gVars);
         tApi.setDomain(MyStringUtils.replaceKeyFromMap(tApi.getDomain(), gVars, caseVars));
+
+
         TApiResult.setReqMethod(tApi.getMethod());
         if (tApi.getMethod().equalsIgnoreCase("post")) {
             TApiResult.setReqBodyType(tApi.getReqBodyType());

@@ -1,19 +1,25 @@
 package com.rabbit.service;
 
+import com.github.pagehelper.PageInfo;
 import com.rabbit.model.TTestPlanResultApi;
-public interface TTestPlanResultApiService{
+
+public interface TTestPlanResultApiService {
 
 
-    int deleteByPrimaryKey(Long id,Integer suiteSuccCount);
 
     int insert(TTestPlanResultApi record);
 
     int insertSelective(TTestPlanResultApi record);
 
-    TTestPlanResultApi selectByPrimaryKey(Long id,Integer suiteSuccCount);
 
     int updateByPrimaryKeySelective(TTestPlanResultApi record);
 
     int updateByPrimaryKey(TTestPlanResultApi record);
 
+    int deleteByPrimaryKey(Long id);
+
+    TTestPlanResultApi selectByPrimaryKey(Long id);
+    PageInfo<TTestPlanResultApi> findByAllwithPage(int page, int pageSize, TTestPlanResultApi tTestPlanResultApi);
 }
+
+

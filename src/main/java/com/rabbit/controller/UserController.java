@@ -50,8 +50,8 @@ public class UserController {
 //    @PreAuthorize("hasAuthority('sys:user:add')")
     public ResponseInfo saveUser(@RequestBody UserDto userDto) {
         Long projectId = userDto.getProjectId();
-        if(projectId == null||projectId == -1){
-            return new ResponseInfo(false, new ErrorInfo(123,"请选择默认项目"));
+        if (projectId == null || projectId == -1) {
+            return new ResponseInfo(false, new ErrorInfo(123, "请选择默认项目"));
         }
         SysUser u = userService.getUser(userDto.getUsername());
         if (u != null) {
@@ -65,8 +65,8 @@ public class UserController {
 //    @PreAuthorize("hasAuthority('sys:user:add')")
     public ResponseInfo updateUser(@RequestBody UserDto userDto) {
         Long projectId = userDto.getProjectId();
-        if(projectId == null||projectId == -1){
-            return new ResponseInfo(false, new ErrorInfo(123,"请选择默认项目"));
+        if (projectId == null || projectId == -1) {
+            return new ResponseInfo(false, new ErrorInfo(123, "请选择默认项目"));
         }
         return new ResponseInfo(true, userService.updateUser(userDto));
     }
@@ -91,7 +91,7 @@ public class UserController {
 
     @PutMapping("/changeProjectId")
     public ResponseInfo changeProjectId(@RequestParam(value = "projectId") Long projectId) {
-        userService.changeProjectId(UserUtil.getLoginUser().getId(),projectId);
+        userService.changeProjectId(UserUtil.getLoginUser().getId(), projectId);
         return new ResponseInfo(true, "修用户默认项目成功");
     }
 
@@ -99,12 +99,12 @@ public class UserController {
 //    @PreAuthorize("hasAuthority('sys:user:resetPassword')")
     public ResponseInfo resetPassword(@RequestParam(value = "username") String username, @RequestParam(value = "newPassword") String newPassword) {
         String loginUser = UserUtil.getLoginUser().getUsername();
-        log.info(username+"========="+loginUser);
-        if (username.equals("admin") & !username.equals(loginUser)){
-            return new ResponseInfo(false, new ErrorInfo(95,"admin账号必须admin用户进行重置"));
+        log.info(username + "=========" + loginUser);
+        if (username.equals("admin") & !username.equals(loginUser)) {
+            return new ResponseInfo(false, new ErrorInfo(95, "admin账号必须admin用户进行重置"));
         }
         userService.resetPassword(username, newPassword);
-        sysLogService.save(UserUtil.getLoginUser().getId(),"重置密码",true,"");
+        sysLogService.save(UserUtil.getLoginUser().getId(), "重置密码", true, "");
         return new ResponseInfo(true, "重置密码成功");
     }
 

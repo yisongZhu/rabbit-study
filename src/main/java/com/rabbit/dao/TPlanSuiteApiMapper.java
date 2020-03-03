@@ -27,8 +27,9 @@ public interface TPlanSuiteApiMapper {
 
     int deleteBySuiteId(@Param("suiteId")Long suiteId);
 
-    @Select("SELECT tf.name AS suite_name ,ta.* FROM t_plan_suite_api ta LEFT JOIN t_testsuite_api tf ON ta.suite_id = tf.id AND ta.job_id = #{jobId}")
+    @Select("SELECT tf.name AS suite_name ,ta.* FROM t_plan_suite_api ta INNER JOIN t_testsuite_api tf ON ta.suite_id = tf.id AND ta.job_id = #{jobId}")
     List<TPlanSuiteApiDto> findDtoByJobId(Long jobId);
 
+    Long countByJobId(@Param("jobId")Long jobId);
 
 }

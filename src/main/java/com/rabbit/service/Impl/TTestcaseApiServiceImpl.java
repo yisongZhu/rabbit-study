@@ -9,9 +9,7 @@ import com.rabbit.dto.TApiCaseResultDto;
 import com.rabbit.dto.TestcaseApiDto;
 import com.rabbit.model.*;
 import com.rabbit.model.po.CaseVar;
-import com.rabbit.service.TApiService;
-import com.rabbit.service.TFileInfoService;
-import com.rabbit.service.TStepApiService;
+import com.rabbit.service.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,13 +17,13 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 import com.rabbit.dao.TTestcaseApiMapper;
-import com.rabbit.service.TTestcaseApiService;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class TTestcaseApiServiceImpl implements TTestcaseApiService {
@@ -45,6 +43,9 @@ public class TTestcaseApiServiceImpl implements TTestcaseApiService {
 
     @Resource
     private TApiService apiService;
+
+    @Resource
+    private GlobalParamService globalParamService;
 
     @Override
     @Transactional
@@ -135,11 +136,15 @@ public class TTestcaseApiServiceImpl implements TTestcaseApiService {
     }
 
     @Override
-    public TApiCaseResultDto debug(TestcaseApiDto testcaseApi, Map<String, Object> gVars, Map<String, Object> caseVars) {
+    public TApiCaseResultDto excCase(TestcaseApiDto testcaseApi) {
+        Map<String, Object> gVars = globalParamService.findByProjectIdAndTypeAndEnvId(testcaseApi.getProjectId(), 2, testcaseApi.getEnvId());
+        Map<String, Object> caseVars = new ConcurrentHashMap<>();
+
         TApiCaseResultDto tApiCaseResult = new TApiCaseResultDto();
         tApiCaseResult.setCreateTime(new Date());
         tApiCaseResult.setCaseId(testcaseApi.getId());
         tApiCaseResult.setCaseName(testcaseApi.getName());
+        tApiCaseResult.setStatus(0);
         List<CaseVar> caseVarList = testcaseApi.getCaseVars();
         if (caseVarList != null) {
             for (CaseVar caseVar : caseVarList) {
@@ -148,31 +153,32 @@ public class TTestcaseApiServiceImpl implements TTestcaseApiService {
         }
         List<StepApiDto> testSteps = testcaseApi.getTestSteps();
         List<TApiResult> stepResults = new ArrayList();
-        int total = 0;
         int success = 0;
         int failed = 0;
         int skipped = 0;
-        if (testSteps != null) {
-            total = testSteps.size();
-            for (StepApiDto stepApiDto : testSteps) {
-                if (stepApiDto.getStatus() == 0) {
-                    continue;
-                }
-                TApi tApi = new TApi();
-                BeanUtils.copyProperties(stepApiDto, tApi);
-                tApi.setEnvId(testcaseApi.getEnvId());
-                TApiResult tApiResult = apiService.excApi(tApi, gVars, caseVars);
-                if (tApiResult.getResultType().equals(1)) {
-                    success = success + 1;
-                } else {
-                    failed = failed + 1;
-                }
-                tApiResult.setStepId(stepApiDto.getId());
-                tApiResult.setStepName(stepApiDto.getName());
-                stepResults.add(tApiResult);
-            }
+        if (testSteps == null) {
+            return tApiCaseResult;
         }
-        tApiCaseResult.setTotal(total);
+        for (StepApiDto stepApiDto : testSteps) {
+            if (stepApiDto.getStatus() == 0) {
+                continue;
+            }
+            TApi tApi = new TApi();
+            BeanUtils.copyProperties(stepApiDto, tApi);
+            tApi.setEnvId(testcaseApi.getEnvId());
+            TApiResult tApiResult = apiService.excApi(tApi, gVars, caseVars);
+            if (tApiResult.getResultType().equals(1)) {
+                success = success + 1;
+            } else {
+                failed = failed + 1;
+                tApiCaseResult.setStatus(1);
+            }
+            tApiResult.setStepId(stepApiDto.getId());
+            tApiResult.setStepName(stepApiDto.getName());
+            stepResults.add(tApiResult);
+        }
+
+        tApiCaseResult.setTotal(testSteps.size());
         tApiCaseResult.setSuccess(success);
         tApiCaseResult.setFailed(failed);
         tApiCaseResult.setSkipped(skipped);
@@ -180,10 +186,12 @@ public class TTestcaseApiServiceImpl implements TTestcaseApiService {
         tApiCaseResult.setEndTime(new Date());
         return tApiCaseResult;
     }
+
     @Override
     public List<TTestcaseApi> findBySuiteId(Long id) {
         return tTestcaseApiMapper.findBySuiteId(id);
     }
+
     @Override
     public List<TestcaseApiDto> selectDtoBySuiteId(Long id) {
         return tTestcaseApiDtoMapper.selectDtoBySuiteId(id);
