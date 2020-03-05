@@ -226,8 +226,7 @@
       `status` = #{status,jdbcType=INTEGER},
       last_online_time = #{lastOnlineTime,jdbcType=TIMESTAMP},
       last_offline_time = #{lastOfflineTime,jdbcType=TIMESTAMP},
-      username = #{username,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
+      username = #{username,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 

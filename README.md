@@ -1,7 +1,7 @@
 # rabbit-platform-server
 
 #### 介绍
-[Rabbit]是一个开源的自动化测试平台，基于经典技术组合(Spring Boot、Spring Security、MyBatis、Jwt、Vue)，目前版本已支持UI自动化测试。平台采用关键字驱动，测试人员无需任何代码基础，即可轻松完成复杂的自动化测试工作。
+[Rabbit]是一个开源的自动化测试平台，基于经典技术组合(Spring Boot、Spring Security、MyBatis、Jwt、Vue)，目前版本已支持UI自动化和接口自动化。平台采用关键字驱动，测试人员无需任何代码基础，即可轻松完成复杂的自动化测试工作。
 
 #### 软件架构
 
@@ -19,7 +19,10 @@
 #### 安装教程和使用说明
 
 1. 操作手册：
-[http://rabbittest.xyz/](http://rabbittest.xyz/)
+[http://rabbittest.xyz/](http://rabbittest.xyz/)、
+2. 演示地址：
+[http://rabbittest.xyz/public](http://rabbittest.xyz/public)、
+账号密码:admin/admin1
 
 #### 参与贡献
 

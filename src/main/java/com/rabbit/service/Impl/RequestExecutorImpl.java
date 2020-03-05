@@ -44,16 +44,18 @@ public class RequestExecutorImpl implements RequestExecutorServer {
 
     @Override
     public TApiResult executeHttpRequest(TApi tApi, Map<String, Object> gVars, Map<String, Object> caseVars) {
-        beforeHandle(tApi, gVars, caseVars);
         TApiResult TApiResult = new TApiResult();
+
+        beforeHandle(tApi, gVars, caseVars);
         TApiResult.setCreateTime(new Date());
         RequestSpecification requestSpecification = given();
         trustAllHosts(requestSpecification);
         applyHeaders(requestSpecification, tApi, gVars, caseVars, TApiResult);
         applyQueryParameters(requestSpecification, tApi, gVars, caseVars, TApiResult);
-        log.info("getDomain:{},gVars:{}",tApi.getDomain(),gVars);
-        tApi.setDomain(MyStringUtils.replaceKeyFromMap(tApi.getDomain(), gVars, caseVars));
 
+        log.info("开始请求执行接口");
+
+        tApi.setDomain(MyStringUtils.replaceKeyFromMap(tApi.getDomain(), gVars, caseVars));
 
         TApiResult.setReqMethod(tApi.getMethod());
         if (tApi.getMethod().equalsIgnoreCase("post")) {
@@ -65,10 +67,15 @@ public class RequestExecutorImpl implements RequestExecutorServer {
             }
         }
         Response response = null;
+        if (!tApi.getPath().startsWith("/")) {
+            tApi.setPath( "/" + tApi.getPath());
+        }
         String url = tApi.getDomain() + tApi.getPath();
         if (url.indexOf("?") != -1) {
             url = url.substring(0, url.indexOf("?"));
         }
+        url = MyStringUtils.replaceKeyFromMap(url, gVars, caseVars);
+        url.replaceAll("/", "\\/");
         TApiResult.setReqUrl(url);
         try {
             switch (tApi.getMethod().toUpperCase()) {
@@ -105,7 +112,7 @@ public class RequestExecutorImpl implements RequestExecutorServer {
             } else {
                 TApiResult.setException("请求异常：" + e.getMessage());
             }
-            log.info("请求异常:{}",e.getMessage());
+            log.info("请求异常:{}", e.getMessage());
             return TApiResult;
         }
         TApiResult.setRspStatusCode(response.getStatusCode());
@@ -315,7 +322,7 @@ public class RequestExecutorImpl implements RequestExecutorServer {
 
 
     //单个断言
-    private AssertResult assertion(Assert assertion, Map<String, Object> caseVars, TApiResult TApiResult) {
+    private AssertResult assertion(Assert assertion, Map<String, Object> caseVars, TApiResult tApiResult) {
         //处理接口变量类型的参数
         if (assertion.getExtractType().equals("apiVar")) {
             String expectValue = assertion.getExpectValue();
@@ -334,8 +341,8 @@ public class RequestExecutorImpl implements RequestExecutorServer {
         String extractExpress = assertion.getExtractExpress() == null ? "" : assertion.getExtractExpress();
         switch (assertion.getDataSource()) {
             case "bodyJson":
-                if (TApiResult.getRspBodyType().equals("json")) {
-                    JsonPath json = new JsonPath(TApiResult.getRspBody());
+                if (tApiResult.getRspBodyType().equals("json")) {
+                    JsonPath json = new JsonPath(tApiResult.getRspBody());
                     Object value = json.get(extractExpress);
                     String realType = ApiUtil.getObjRealType(value);
                     if (realType.equals("null")) {
@@ -351,8 +358,8 @@ public class RequestExecutorImpl implements RequestExecutorServer {
                 }
                 break;
             case "bodyXml":
-                if (TApiResult.getRspBodyType().equals("bodyXml")) {
-                    XmlPath xmlPath = new XmlPath(TApiResult.getRspBody());
+                if (tApiResult.getRspBodyType().equals("bodyXml")) {
+                    XmlPath xmlPath = new XmlPath(tApiResult.getRspBody());
                     Object value = xmlPath.get(extractExpress);
                     String realType = ApiUtil.getObjRealType(value);
                     if (realType.equals("null")) {
@@ -368,7 +375,7 @@ public class RequestExecutorImpl implements RequestExecutorServer {
                 }
                 break;
             case "bodyReg":
-                String value = MyStringUtils.extractValue(TApiResult.getRspBody(), assertion.getExtractExpress(), 1);
+                String value = MyStringUtils.extractValue(tApiResult.getRspBody(), assertion.getExtractExpress(), 1);
                 if (value == null) {
                     assertResult.setRealType("null");
                     assertResult.setRealValue("");
@@ -378,17 +385,17 @@ public class RequestExecutorImpl implements RequestExecutorServer {
                 }
                 break;
             case "code":
-                String realType = ApiUtil.getObjRealType(TApiResult.getRspStatusCode());
+                String realType = ApiUtil.getObjRealType(tApiResult.getRspStatusCode());
                 if (realType.equals("null")) {
                     assertResult.setRealType("null");
                     assertResult.setRealValue("");
                 } else {
                     assertResult.setRealType(realType);
-                    assertResult.setRealValue(String.valueOf(TApiResult.getRspStatusCode()));
+                    assertResult.setRealValue(String.valueOf(tApiResult.getRspStatusCode()));
                 }
                 break;
             case "header":
-                com.rabbit.model.po.Header header = TApiResult.getRspHeaders().stream().filter(x -> x.getKey().equals(extractExpress)).findFirst().orElse(null);
+                com.rabbit.model.po.Header header = tApiResult.getRspHeaders().stream().filter(x -> x.getKey().equals(extractExpress)).findFirst().orElse(null);
                 if (header == null) {
                     assertResult.setRealType("null");
                 } else {

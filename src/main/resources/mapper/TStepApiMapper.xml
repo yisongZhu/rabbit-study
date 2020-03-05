@@ -292,9 +292,7 @@
       req_extract = #{reqExtract,jdbcType=LONGVARCHAR,typeHandler=com.rabbit.typehandler.ExtractListTypeHandler},
       req_assert = #{reqAssert,jdbcType=LONGVARCHAR,typeHandler=com.rabbit.typehandler.AssertListTypeHandler},
       create_by = #{createBy,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=VARCHAR},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
       sort = #{sort,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>

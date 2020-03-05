@@ -32,7 +32,7 @@ public class ApiUtil {
                 if (realType.equals("number")) {
                     Double aDouble = Double.valueOf(assertion.getExpectValue());
                     Double aDouble1 = Double.valueOf(realValue);
-                    if (aDouble > aDouble1) {
+                    if (aDouble < aDouble1) {
                         return true;
                     }
                 }
@@ -41,7 +41,7 @@ public class ApiUtil {
                 if (realType.equals("number")) {
                     Double aDouble = Double.valueOf(assertion.getExpectValue());
                     Double aDouble1 = Double.valueOf(realValue);
-                    if (aDouble >= aDouble1) {
+                    if (aDouble <= aDouble1) {
                         return true;
                     }
                 }
@@ -50,7 +50,7 @@ public class ApiUtil {
                 if (realType.equals("number")) {
                     Double aDouble = Double.valueOf(assertion.getExpectValue());
                     Double aDouble1 = Double.valueOf(realValue);
-                    if (aDouble < aDouble1) {
+                    if (aDouble > aDouble1) {
                         return true;
                     }
                 }
@@ -59,18 +59,18 @@ public class ApiUtil {
                 if (realType.equals("number")) {
                     Double aDouble = Double.valueOf(assertion.getExpectValue());
                     Double aDouble1 = Double.valueOf(realValue);
-                    if (aDouble <= aDouble1) {
+                    if (aDouble >= aDouble1) {
                         return true;
                     }
                 }
                 break;
             case "包含":
-                if (assertion.getExpectValue().contains(realValue)) {
+                if (realValue.contains(assertion.getExpectValue())) {
                     return true;
                 }
                 break;
             case "不包含":
-                if (!assertion.getExpectValue().contains(realValue)) {
+                if (!realValue.contains(assertion.getExpectValue())) {
                     return true;
                 }
                 break;
@@ -80,32 +80,32 @@ public class ApiUtil {
                 }
                 break;
             case "长度大于":
-                if (assertion.getExpectValue().length() > realValue.length()) {
+                if (realValue.length() > assertion.getExpectValue().length()) {
                     return true;
                 }
                 break;
             case "长度大于等于":
-                if (assertion.getExpectValue().length() >= realValue.length()) {
+                if (realValue.length() >= assertion.getExpectValue().length()) {
                     return true;
                 }
                 break;
             case "长度小于":
-                if (assertion.getExpectValue().length() < realValue.length()) {
+                if (realValue.length() < assertion.getExpectValue().length()) {
                     return true;
                 }
                 break;
             case "长度小等于":
-                if (assertion.getExpectValue().length() <= realValue.length()) {
+                if (realValue.length() <= assertion.getExpectValue().length()) {
                     return true;
                 }
                 break;
             case "开始于":
-                if (assertion.getExpectValue().startsWith(realValue)) {
+                if (realValue.startsWith(assertion.getExpectValue())) {
                     return true;
                 }
                 break;
             case "结束于":
-                if (assertion.getExpectValue().endsWith(realValue)) {
+                if (realValue.endsWith(assertion.getExpectValue())) {
                     return true;
                 }
                 break;

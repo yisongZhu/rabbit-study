@@ -118,9 +118,7 @@
         case_type = #{caseType,jdbcType=BIGINT},
         remark = #{remark,jdbcType=VARCHAR},
         create_by = #{createBy,jdbcType=VARCHAR},
-        update_by = #{updateBy,jdbcType=VARCHAR},
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-        update_time = #{updateTime,jdbcType=TIMESTAMP}
+        update_by = #{updateBy,jdbcType=VARCHAR}
         where id = #{id,jdbcType=BIGINT}
     </update>
 

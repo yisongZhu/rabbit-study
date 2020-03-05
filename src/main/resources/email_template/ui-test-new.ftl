@@ -45,7 +45,7 @@
                                 <div
                                     style="color: rgb(77, 77, 77); line-height: 1.5; font-size: 14px; margin-bottom: 25px;">
                                     <strong style="margin-bottom: 15px; display: block;">亲爱的Tester：
-                                        您好！以下是自动化任务【${params.jobname}】执行情况。</strong>
+                                        您好！以下是Web自动化任务【${params.jobname}】执行情况。</strong>
                                     <br>
 									<p><b>构建日期【<font color='#2828FF'>${params.createTime}</font>】</b></p>
                                     <p><b>本次任务执行测试集共【<font color='#2828FF'>${params.businesscount}</font>】条,耗時【${params.businesstime}】秒</b></p>

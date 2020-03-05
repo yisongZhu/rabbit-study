@@ -308,8 +308,7 @@
       rsp_extracts = #{rspExtracts,jdbcType=LONGVARCHAR,typeHandler=com.rabbit.typehandler.ExtractResultListTypeHandler},
       rsp_asserts = #{rspAsserts,jdbcType=LONGVARCHAR,typeHandler=com.rabbit.typehandler.AssertResultListTypeHandler},
       rsp_time = #{rspTime,jdbcType=BIGINT},
-      `exception` = #{exception,jdbcType=LONGVARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
+      `exception` = #{exception,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
