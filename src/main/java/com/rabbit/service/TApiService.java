@@ -34,7 +34,7 @@ public interface TApiService {
 
     Result runAction(Action action, Map<String, Object> gVars, Map<String, Object> caseVars);
 
-    TApiResult excApi(TApi api, Map<String, Object> gVars, Map<String, Object> caseVars);
+    TApiResult excApi(TApi api, Map<String, Object> gVars, Map<String, Object> caseVars, Map<String, Object> apiParams);
 }
 
 

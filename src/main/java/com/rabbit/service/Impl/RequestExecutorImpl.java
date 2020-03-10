@@ -43,40 +43,37 @@ public class RequestExecutorImpl implements RequestExecutorServer {
     private TApiService apiService;
 
     @Override
-    public TApiResult executeHttpRequest(TApi tApi, Map<String, Object> gVars, Map<String, Object> caseVars) {
-        TApiResult TApiResult = new TApiResult();
+    public TApiResult executeHttpRequest(TApi tApi, Map<String, Object> gVars, Map<String, Object> caseVars, Map<String, Object> apiParams) {
+        TApiResult tApiResult = new TApiResult();
 
         beforeHandle(tApi, gVars, caseVars);
-        TApiResult.setCreateTime(new Date());
+        tApiResult.setCreateTime(new Date());
         RequestSpecification requestSpecification = given();
         trustAllHosts(requestSpecification);
-        applyHeaders(requestSpecification, tApi, gVars, caseVars, TApiResult);
-        applyQueryParameters(requestSpecification, tApi, gVars, caseVars, TApiResult);
-
+        applyHeaders(requestSpecification, tApi, gVars, caseVars, tApiResult, apiParams);
+        applyQueryParameters(requestSpecification, tApi, gVars, caseVars, tApiResult, apiParams);
         log.info("开始请求执行接口");
-
-        tApi.setDomain(MyStringUtils.replaceKeyFromMap(tApi.getDomain(), gVars, caseVars));
-
-        TApiResult.setReqMethod(tApi.getMethod());
-        if (tApi.getMethod().equalsIgnoreCase("post")) {
-            TApiResult.setReqBodyType(tApi.getReqBodyType());
+        tApi.setDomain(MyStringUtils.replaceKeyFromMap(tApi.getDomain(), gVars, caseVars, apiParams));
+        tApiResult.setReqMethod(tApi.getMethod());
+        if (!tApi.getMethod().equalsIgnoreCase("get")) {
+            tApiResult.setReqBodyType(tApi.getReqBodyType());
             if (tApi.getReqBodyType().equals("form")) {
-                applyFormParam(requestSpecification, tApi, gVars, caseVars, TApiResult);
+                applyFormParam(requestSpecification, tApi, gVars, caseVars, tApiResult, apiParams);
             } else if (tApi.getReqBodyType().equals("raw")) {
-                applyRawParam(requestSpecification, tApi, gVars, caseVars, TApiResult);
+                applyRawParam(requestSpecification, tApi, gVars, caseVars, tApiResult, apiParams);
             }
         }
         Response response = null;
         if (!tApi.getPath().startsWith("/")) {
-            tApi.setPath( "/" + tApi.getPath());
+            tApi.setPath("/" + tApi.getPath());
         }
         String url = tApi.getDomain() + tApi.getPath();
         if (url.indexOf("?") != -1) {
             url = url.substring(0, url.indexOf("?"));
         }
-        url = MyStringUtils.replaceKeyFromMap(url, gVars, caseVars);
+        url = MyStringUtils.replaceKeyFromMap(url, gVars, caseVars, apiParams);
         url.replaceAll("/", "\\/");
-        TApiResult.setReqUrl(url);
+        tApiResult.setReqUrl(url);
         try {
             switch (tApi.getMethod().toUpperCase()) {
                 case "GET":
@@ -101,23 +98,23 @@ public class RequestExecutorImpl implements RequestExecutorServer {
                     response = requestSpecification.when().head(url);
                     break;
                 default:
-                    TApiResult.setException(String.format("不支持这个请求 %s.", url));
+                    tApiResult.setException(String.format("不支持这个请求 %s.", url));
             }
         } catch (Exception e) {
-            TApiResult.setResultType(-1);
+            tApiResult.setResultType(-1);
             if (e instanceof UnknownHostException) {
-                TApiResult.setException("请求异常,URL[" + e.getMessage() + "]无法连接");
+                tApiResult.setException("请求异常,URL[" + e.getMessage() + "]无法连接");
             } else if (e instanceof ConnectException) {
-                TApiResult.setException("请求异常,URL[" + tApi.getDomain() + "]无法连接");
+                tApiResult.setException("请求异常,URL[" + tApi.getDomain() + "]无法连接");
             } else {
-                TApiResult.setException("请求异常：" + e.getMessage());
+                tApiResult.setException("请求异常：" + e.getMessage());
             }
             log.info("请求异常:{}", e.getMessage());
-            return TApiResult;
+            return tApiResult;
         }
-        TApiResult.setRspStatusCode(response.getStatusCode());
-        TApiResult.setRspTime(response.getTime());
-        TApiResult.setRspBodySize(response.getBody().asByteArray().length);
+        tApiResult.setRspStatusCode(response.getStatusCode());
+        tApiResult.setRspTime(response.getTime());
+        tApiResult.setRspBodySize(response.getBody().asByteArray().length);
         List<com.rabbit.model.po.Header> listHeader = new ArrayList<>();
         response.getHeaders().asList().forEach(x -> {
             com.rabbit.model.po.Header header = new com.rabbit.model.po.Header();
@@ -125,19 +122,19 @@ public class RequestExecutorImpl implements RequestExecutorServer {
             header.setValue(x.getValue());
             listHeader.add(header);
         });
-        TApiResult.setRspHeaders(listHeader);
-        TApiResult.setRspBody(response.getBody().prettyPrint());
-        TApiResult.setRspBodyType(StringUtilHelper.checkStringFormat(TApiResult.getRspBody()));
-        Boolean handResult = handleAssert(tApi, caseVars, TApiResult); //断言
-        handleExtract(tApi, caseVars, TApiResult); //提取参数
+        tApiResult.setRspHeaders(listHeader);
+        tApiResult.setRspBody(response.getBody().prettyPrint());
+        tApiResult.setRspBodyType(StringUtilHelper.checkStringFormat(tApiResult.getRspBody()));
+        Boolean handResult = handleAssert(tApi, caseVars, tApiResult); //断言
+        handleExtract(tApi, caseVars, tApiResult); //提取参数
         if (handResult) {
             //响应断言成功
-            TApiResult.setResultType(1);
+            tApiResult.setResultType(1);
         } else {
             //断言失败
-            TApiResult.setResultType(0);
+            tApiResult.setResultType(0);
         }
-        return TApiResult;
+        return tApiResult;
     }
 
     private void beforeHandle(TApi tApi, Map<String, Object> gVars, Map<String, Object> caseVars) {
@@ -163,15 +160,19 @@ public class RequestExecutorImpl implements RequestExecutorServer {
         requestSpecification.config(RestAssured.config);
     }
 
-    private void applyHeaders(RequestSpecification requestSpecification, TApi tApi, Map<String, Object> gVars, Map<String, Object> caseVars, TApiResult TApiResult) {
+    private void applyHeaders(RequestSpecification requestSpecification, TApi tApi, Map<String, Object> gVars, Map<String, Object> caseVars, TApiResult TApiResult, Map<String, Object> apiParams) {
         List<com.rabbit.model.po.Header> headers = tApi.getReqHeader();
         for (com.rabbit.model.po.Header header : headers) {
-            header.setValue(MyStringUtils.replaceKeyFromMap(header.getValue(), gVars, caseVars));
+            header.setValue(MyStringUtils.replaceKeyFromMap(header.getValue(), gVars, caseVars, apiParams));
             if (header.getKey().equalsIgnoreCase("cookie")) {
                 String[] cookies = header.getValue().split(";");
-                for (String s : cookies) {
-                    String[] c = header.getValue().split("=");
-                    requestSpecification.cookie(c[0], c[1]);
+                for (String cookie : cookies) {
+                    String[] c = cookie.split("=");
+                    if (c != null && c.length < 2) {
+                        requestSpecification.cookie(cookie);
+                    } else {
+                        requestSpecification.cookie(c[0], c[1]);
+                    }
                 }
             } else {
                 requestSpecification.header(new Header(header.getKey(), header.getValue()));
@@ -180,11 +181,11 @@ public class RequestExecutorImpl implements RequestExecutorServer {
         TApiResult.setReqHeaders(headers);
     }
 
-    private void applyQueryParameters(RequestSpecification requestSpecification, TApi tApi, Map<String, Object> gVars, Map<String, Object> caseVars, TApiResult TApiResult) {
+    private void applyQueryParameters(RequestSpecification requestSpecification, TApi tApi, Map<String, Object> gVars, Map<String, Object> caseVars, TApiResult TApiResult, Map<String, Object> apiParams) {
         List<Query> reqQuerys = tApi.getReqQuery();
         try {
             for (Query reqQuery : reqQuerys) {
-                reqQuery.setValue(MyStringUtils.replaceKeyFromMap(reqQuery.getValue(), gVars, caseVars));
+                reqQuery.setValue(MyStringUtils.replaceKeyFromMap(reqQuery.getValue(), gVars, caseVars, apiParams));
                 requestSpecification.queryParam(reqQuery.getKey(), URLDecoder.decode(reqQuery.getValue()));
             }
             TApiResult.setReqQuery(tApi.getReqQuery());
@@ -193,11 +194,11 @@ public class RequestExecutorImpl implements RequestExecutorServer {
         }
     }
 
-    private void applyFormParam(RequestSpecification requestSpecification, TApi tApi, Map<String, Object> gVars, Map<String, Object> caseVars, TApiResult TApiResult) {
+    private void applyFormParam(RequestSpecification requestSpecification, TApi tApi, Map<String, Object> gVars, Map<String, Object> caseVars, TApiResult TApiResult, Map<String, Object> apiParams) {
         try {
             List<BodyData> reqBodyDatas = tApi.getReqBodyData();
             for (BodyData reqBodyData : reqBodyDatas) {
-                reqBodyData.setValue(MyStringUtils.replaceKeyFromMap(reqBodyData.getValue(), gVars, caseVars));
+                reqBodyData.setValue(MyStringUtils.replaceKeyFromMap(reqBodyData.getValue(), gVars, caseVars, apiParams));
                 if (reqBodyData.getType().equals("file")) {
                     String absolutePath = fileInfoService.getAbsolutePath(2, tApi.getId(), reqBodyData.getValue());
                     log.info("导入的文件名称为：{}", absolutePath);
@@ -217,8 +218,8 @@ public class RequestExecutorImpl implements RequestExecutorServer {
         }
     }
 
-    private void applyRawParam(RequestSpecification requestSpecification, TApi tApi, Map<String, Object> gVars, Map<String, Object> caseVars, TApiResult TApiResult) {
-        tApi.setReqBodyJson(MyStringUtils.replaceKeyFromMap(tApi.getReqBodyJson(), gVars, caseVars));
+    private void applyRawParam(RequestSpecification requestSpecification, TApi tApi, Map<String, Object> gVars, Map<String, Object> caseVars, TApiResult TApiResult, Map<String, Object> apiParams) {
+        tApi.setReqBodyJson(MyStringUtils.replaceKeyFromMap(tApi.getReqBodyJson(), gVars, caseVars, apiParams));
         TApiResult.setReqBodyJson(tApi.getReqBodyJson());
         requestSpecification.body(tApi.getReqBodyJson());
     }
@@ -288,13 +289,27 @@ public class RequestExecutorImpl implements RequestExecutorServer {
                     }
                     break;
                 case "header":
-                    com.rabbit.model.po.Header header = TApiResult.getRspHeaders().stream().filter(x -> x.getKey().equals(extractExpress)).findFirst().orElse(null);
+                    com.rabbit.model.po.Header header = TApiResult.getRspHeaders().stream()
+                            .filter(x -> x.getKey().equals(extractExpress.split("\\.")[0])).findFirst().orElse(null);
                     if (header == null) {
                         extractResult.setRealType("null");
                     } else {
                         extractResult.setRealType("string");
                     }
-                    extractResult.setRealValue(header.getValue());
+                    if (extractExpress.split("\\.").length > 1) {
+                        String[] split = header.getValue().split(";");
+                        for (String s : split) {
+                            String[] split1 = s.split("=");
+                            if (split1.length > 1 && split1[0].trim().equals(extractExpress.split("\\.")[1].trim())) {
+                                extractResult.setRealValue(split1[1].trim());
+                                break;
+                            }
+                            extractResult.setRealType("null");
+                            extractResult.setRealValue("");
+                        }
+                    } else {
+                        extractResult.setRealValue(header.getValue());
+                    }
                     break;
                 default:
             }

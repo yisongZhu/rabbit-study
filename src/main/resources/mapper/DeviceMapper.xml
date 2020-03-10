@@ -5,6 +5,7 @@
     <!--@mbg.generated-->
     <!--@Table device-->
     <id column="id" jdbcType="VARCHAR" property="id" />
+    <id column="status" jdbcType="INTEGER" property="status" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="agent_ip" jdbcType="VARCHAR" property="agentIp" />
     <result column="agent_port" jdbcType="INTEGER" property="agentPort" />
@@ -13,9 +14,8 @@
     <result column="mem_size" jdbcType="VARCHAR" property="memSize" />
     <result column="screen_width" jdbcType="INTEGER" property="screenWidth" />
     <result column="screen_height" jdbcType="INTEGER" property="screenHeight" />
-    <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
+    <result column="img_path" jdbcType="VARCHAR" property="imgPath" />
     <result column="platform" jdbcType="INTEGER" property="platform" />
-    <result column="status" jdbcType="INTEGER" property="status" />
     <result column="last_online_time" jdbcType="TIMESTAMP" property="lastOnlineTime" />
     <result column="last_offline_time" jdbcType="TIMESTAMP" property="lastOfflineTime" />
     <result column="username" jdbcType="VARCHAR" property="username" />
@@ -23,34 +23,36 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    id, `name`, agent_ip, agent_port, system_version, cpu_info, mem_size, screen_width, 
-    screen_height, img_url, platform, `status`, last_online_time, last_offline_time, 
-    username, create_time
+    id, `status`, `name`, agent_ip, agent_port, system_version, cpu_info, mem_size, screen_width, 
+    screen_height, img_path, platform, last_online_time, last_offline_time, username, 
+    create_time
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
     <!--@mbg.generated-->
     select 
     <include refid="Base_Column_List" />
     from device
     where id = #{id,jdbcType=VARCHAR}
+      and `status` = #{status,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+  <delete id="deleteByPrimaryKey" parameterType="map">
     <!--@mbg.generated-->
     delete from device
     where id = #{id,jdbcType=VARCHAR}
+      and `status` = #{status,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.rabbit.model.Device">
     <!--@mbg.generated-->
-    insert into device (id, `name`, agent_ip, 
-      agent_port, system_version, cpu_info, 
-      mem_size, screen_width, screen_height, 
-      img_url, platform, `status`, 
+    insert into device (id, `status`, `name`, 
+      agent_ip, agent_port, system_version, 
+      cpu_info, mem_size, screen_width, 
+      screen_height, img_path, platform, 
       last_online_time, last_offline_time, username, 
       create_time)
-    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{agentIp,jdbcType=VARCHAR}, 
-      #{agentPort,jdbcType=INTEGER}, #{systemVersion,jdbcType=VARCHAR}, #{cpuInfo,jdbcType=VARCHAR}, 
-      #{memSize,jdbcType=VARCHAR}, #{screenWidth,jdbcType=INTEGER}, #{screenHeight,jdbcType=INTEGER}, 
-      #{imgUrl,jdbcType=VARCHAR}, #{platform,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+      #{agentIp,jdbcType=VARCHAR}, #{agentPort,jdbcType=INTEGER}, #{systemVersion,jdbcType=VARCHAR}, 
+      #{cpuInfo,jdbcType=VARCHAR}, #{memSize,jdbcType=VARCHAR}, #{screenWidth,jdbcType=INTEGER}, 
+      #{screenHeight,jdbcType=INTEGER}, #{imgPath,jdbcType=VARCHAR}, #{platform,jdbcType=INTEGER}, 
       #{lastOnlineTime,jdbcType=TIMESTAMP}, #{lastOfflineTime,jdbcType=TIMESTAMP}, #{username,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
@@ -60,6 +62,9 @@
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null and id != ''">
         id,
+      </if>
+      <if test="status != null">
+        `status`,
       </if>
       <if test="name != null and name != ''">
         `name`,
@@ -85,14 +90,11 @@
       <if test="screenHeight != null">
         screen_height,
       </if>
-      <if test="imgUrl != null and imgUrl != ''">
-        img_url,
+      <if test="imgPath != null and imgPath != ''">
+        img_path,
       </if>
       <if test="platform != null">
         platform,
-      </if>
-      <if test="status != null">
-        `status`,
       </if>
       <if test="lastOnlineTime != null">
         last_online_time,
@@ -110,6 +112,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null and id != ''">
         #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
       </if>
       <if test="name != null and name != ''">
         #{name,jdbcType=VARCHAR},
@@ -135,14 +140,11 @@
       <if test="screenHeight != null">
         #{screenHeight,jdbcType=INTEGER},
       </if>
-      <if test="imgUrl != null and imgUrl != ''">
-        #{imgUrl,jdbcType=VARCHAR},
+      <if test="imgPath != null and imgPath != ''">
+        #{imgPath,jdbcType=VARCHAR},
       </if>
       <if test="platform != null">
         #{platform,jdbcType=INTEGER},
-      </if>
-      <if test="status != null">
-        #{status,jdbcType=INTEGER},
       </if>
       <if test="lastOnlineTime != null">
         #{lastOnlineTime,jdbcType=TIMESTAMP},
@@ -186,14 +188,11 @@
       <if test="screenHeight != null">
         screen_height = #{screenHeight,jdbcType=INTEGER},
       </if>
-      <if test="imgUrl != null and imgUrl != ''">
-        img_url = #{imgUrl,jdbcType=VARCHAR},
+      <if test="imgPath != null and imgPath != ''">
+        img_path = #{imgPath,jdbcType=VARCHAR},
       </if>
       <if test="platform != null">
         platform = #{platform,jdbcType=INTEGER},
-      </if>
-      <if test="status != null">
-        `status` = #{status,jdbcType=INTEGER},
       </if>
       <if test="lastOnlineTime != null">
         last_online_time = #{lastOnlineTime,jdbcType=TIMESTAMP},
@@ -209,6 +208,7 @@
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
+      and `status` = #{status,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.rabbit.model.Device">
     <!--@mbg.generated-->
@@ -221,77 +221,80 @@
       mem_size = #{memSize,jdbcType=VARCHAR},
       screen_width = #{screenWidth,jdbcType=INTEGER},
       screen_height = #{screenHeight,jdbcType=INTEGER},
-      img_url = #{imgUrl,jdbcType=VARCHAR},
+      img_path = #{imgPath,jdbcType=VARCHAR},
       platform = #{platform,jdbcType=INTEGER},
-      `status` = #{status,jdbcType=INTEGER},
       last_online_time = #{lastOnlineTime,jdbcType=TIMESTAMP},
       last_offline_time = #{lastOfflineTime,jdbcType=TIMESTAMP},
-      username = #{username,jdbcType=VARCHAR}
+      username = #{username,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=VARCHAR}
+      and `status` = #{status,jdbcType=INTEGER}
   </update>
 
-<!--auto generated by MybatisCodeHelper on 2019-10-30-->
+<!--auto generated by MybatisCodeHelper on 2020-03-07-->
   <select id="findByAll" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List" />
-        from device
-        where 1=1
-        <if test="id != null and id != ''">
-            and id=#{id,jdbcType=VARCHAR}
-        </if>
-        <if test="name != null and name != ''">
-            and `name`=#{name,jdbcType=VARCHAR}
-        </if>
-        <if test="agentIp != null and agentIp != ''">
-            and agent_ip=#{agentIp,jdbcType=VARCHAR}
-        </if>
-        <if test="agentPort != null">
-            and agent_port=#{agentPort,jdbcType=INTEGER}
-        </if>
-        <if test="systemVersion != null and systemVersion != ''">
-            and system_version=#{systemVersion,jdbcType=VARCHAR}
-        </if>
-        <if test="cpuInfo != null and cpuInfo != ''">
-            and cpu_info=#{cpuInfo,jdbcType=VARCHAR}
-        </if>
-        <if test="memSize != null and memSize != ''">
-            and mem_size=#{memSize,jdbcType=VARCHAR}
-        </if>
-        <if test="screenWidth != null">
-            and screen_width=#{screenWidth,jdbcType=INTEGER}
-        </if>
-        <if test="screenHeight != null">
-            and screen_height=#{screenHeight,jdbcType=INTEGER}
-        </if>
-        <if test="imgUrl != null and imgUrl != ''">
-            and img_url=#{imgUrl,jdbcType=VARCHAR}
-        </if>
-        <if test="platform != null">
-            and platform=#{platform,jdbcType=TINYINT}
-        </if>
-        <if test="status != null">
-            and `status`=#{status,jdbcType=TINYINT}
-        </if>
-        <if test="lastOnlineTime != null">
-            and last_online_time=#{lastOnlineTime,jdbcType=TIMESTAMP}
-        </if>
-        <if test="lastOfflineTime != null">
-            and last_offline_time=#{lastOfflineTime,jdbcType=TIMESTAMP}
-        </if>
-        <if test="username != null and username != ''">
-            and username=#{username,jdbcType=VARCHAR}
-        </if>
-        <if test="createTime != null">
-            and create_time=#{createTime,jdbcType=TIMESTAMP}
-        </if>
-    </select>
+    select
+    <include refid="Base_Column_List"/>
+    from device
+    <where>
+      <if test="id != null and id != ''">
+        and id=#{id,jdbcType=VARCHAR}
+      </if>
+      <if test="status != null">
+        and `status`=#{status,jdbcType=INTEGER}
+      </if>
+      <if test="name != null and name != ''">
+        and `name`=#{name,jdbcType=VARCHAR}
+      </if>
+      <if test="agentIp != null and agentIp != ''">
+        and agent_ip=#{agentIp,jdbcType=VARCHAR}
+      </if>
+      <if test="agentPort != null">
+        and agent_port=#{agentPort,jdbcType=INTEGER}
+      </if>
+      <if test="systemVersion != null and systemVersion != ''">
+        and system_version=#{systemVersion,jdbcType=VARCHAR}
+      </if>
+      <if test="cpuInfo != null and cpuInfo != ''">
+        and cpu_info=#{cpuInfo,jdbcType=VARCHAR}
+      </if>
+      <if test="memSize != null and memSize != ''">
+        and mem_size=#{memSize,jdbcType=VARCHAR}
+      </if>
+      <if test="screenWidth != null">
+        and screen_width=#{screenWidth,jdbcType=INTEGER}
+      </if>
+      <if test="screenHeight != null">
+        and screen_height=#{screenHeight,jdbcType=INTEGER}
+      </if>
+      <if test="imgPath != null and imgPath != ''">
+        and img_path=#{imgPath,jdbcType=VARCHAR}
+      </if>
+      <if test="platform != null">
+        and platform=#{platform,jdbcType=INTEGER}
+      </if>
+      <if test="lastOnlineTime != null">
+        and last_online_time=#{lastOnlineTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="lastOfflineTime != null">
+        and last_offline_time=#{lastOfflineTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="username != null and username != ''">
+        and username=#{username,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null">
+        and create_time=#{createTime,jdbcType=TIMESTAMP}
+      </if>
+    </where>
+  </select>
 
-<!--auto generated by MybatisCodeHelper on 2019-10-30-->
+<!--auto generated by MybatisCodeHelper on 2020-03-07-->
   <select id="findByPlatformAndStatusNot" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"/>
     from device
     where platform=#{platform,jdbcType=INTEGER} and `status` <![CDATA[<>]]> #{notStatus,jdbcType=INTEGER}
   </select>
+
 
 </mapper>

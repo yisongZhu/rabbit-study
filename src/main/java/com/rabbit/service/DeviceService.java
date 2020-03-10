@@ -25,5 +25,11 @@ public interface DeviceService {
     List<Device> getOnlineDevices(Integer platform);
 
     List<Device> findByAll(Device device);
+
+    int deleteByPrimaryKey(String id, Integer status);
+
+    Device selectByPrimaryKey(String id, Integer status);
 }
+
+
 

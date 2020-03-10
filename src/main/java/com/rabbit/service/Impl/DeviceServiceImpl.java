@@ -64,5 +64,17 @@ public class DeviceServiceImpl implements DeviceService {
     public List<Device> findByAll(Device device) {
         return deviceMapper.findByAll(device);
     }
+
+    @Override
+    public int deleteByPrimaryKey(String id, Integer status) {
+        return deviceMapper.deleteByPrimaryKey(id, status);
+    }
+
+    @Override
+    public Device selectByPrimaryKey(String id, Integer status) {
+        return deviceMapper.selectByPrimaryKey(id, status);
+    }
 }
+
+
 

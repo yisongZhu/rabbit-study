@@ -15,6 +15,11 @@ public class Device implements Serializable {
     private String id;
 
     /**
+     * 设备状态：0.离线 1.使用中 2.空闲
+     */
+    private Integer status;
+
+    /**
      * 设备名
      */
     private String name;
@@ -55,19 +60,14 @@ public class Device implements Serializable {
     private Integer screenHeight;
 
     /**
-     * 图片地址，用于在前端展示
+     * 服务端保存的文件路径
      */
-    private String imgUrl;
+    private String imgPath;
 
     /**
      * 平台：1.android  2.ios
      */
     private Integer platform;
-
-    /**
-     * 设备状态：0.离线 1.使用中 2.空闲
-     */
-    private Integer status;
 
     /**
      * 最近一次在线时间

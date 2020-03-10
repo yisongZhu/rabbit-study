@@ -42,6 +42,7 @@ public class TApiServiceImpl implements TApiService {
     private TTestDatabeseService testDatabeseService;
     @Resource
     private RequestExecutorServer requestExecutorServer;
+
     @Override
     @Transactional
     public int deleteByPrimaryKey(Long id) {
@@ -97,11 +98,9 @@ public class TApiServiceImpl implements TApiService {
 
 
     @Override
-    public TApiResult excApi(TApi api, Map<String, Object> gVars, Map<String, Object> caseVars) {
-        return requestExecutorServer.executeHttpRequest(api, gVars, caseVars);
+    public TApiResult excApi(TApi api, Map<String, Object> gVars, Map<String, Object> caseVars, Map<String, Object> apiParams) {
+        return requestExecutorServer.executeHttpRequest(api, gVars, caseVars, apiParams);
     }
-
-
 
     @Override
     public Result runAction(Action action, Map<String, Object> gVars, Map<String, Object> caseVars) {

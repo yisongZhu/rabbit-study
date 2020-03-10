@@ -166,7 +166,8 @@ public class TTestcaseApiServiceImpl implements TTestcaseApiService {
             TApi tApi = new TApi();
             BeanUtils.copyProperties(stepApiDto, tApi);
             tApi.setEnvId(testcaseApi.getEnvId());
-            TApiResult tApiResult = apiService.excApi(tApi, gVars, caseVars);
+            Map<String, Object> apiParams = new ConcurrentHashMap<>();
+            TApiResult tApiResult = apiService.excApi(tApi, gVars, caseVars, apiParams);
             if (tApiResult.getResultType().equals(1)) {
                 success = success + 1;
             } else {

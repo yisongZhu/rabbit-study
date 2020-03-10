@@ -133,9 +133,9 @@ public class ApiController {
     public ResponseInfo debugTApi(@RequestBody TApi api) {
         Map<String, Object> gVars = globalParamService.findByProjectIdAndTypeAndEnvId(api.getProjectId(), 2, api.getEnvId());
         Map<String, Object> caseVars = new ConcurrentHashMap<>();
+        Map<String, Object> apiParams = new ConcurrentHashMap<>();
         try {
-//            ApiResult apiResult = new RequestExecutor(api, gVars, caseVars).executeHttpRequest();
-            TApiResult TApiResult = tApiService.excApi(api, gVars, caseVars);
+            TApiResult TApiResult = tApiService.excApi(api, gVars, caseVars,apiParams);
             return new ResponseInfo(true, TApiResult);
         } catch (Exception e) {
             log.error("debug出错：", e);
