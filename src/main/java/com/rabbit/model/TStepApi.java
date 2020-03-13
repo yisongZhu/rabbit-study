@@ -1,6 +1,7 @@
 package com.rabbit.model;
 
 import com.rabbit.model.po.Action;
+import com.rabbit.model.po.ApiParam;
 import com.rabbit.model.po.Assert;
 import com.rabbit.model.po.BodyData;
 import com.rabbit.model.po.Extract;
@@ -54,6 +55,11 @@ public class TStepApi implements Serializable {
      * 请求路径
      */
     private String path;
+
+    /**
+     * api请求参数
+     */
+    private List<ApiParam> apiParams;
 
     /**
      * 前置执行器

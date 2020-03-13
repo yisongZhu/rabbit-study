@@ -18,6 +18,29 @@ public class ApiUtil {
         }
     }
 
+    public static Object getRealObj(String object, Integer type) {
+        if (type.equals(1)) {
+            return object;
+        } else if (type.equals(2)) {
+            Double aDouble = new Double(0);
+            try {
+                aDouble = Double.valueOf(object);
+            } catch (Exception e) {
+            }
+            return aDouble;
+        } else if (type.equals(3)) {
+            if (object.toLowerCase().equals("true")) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (type.equals(4)) {
+            return null;
+        } else {
+            return object;
+        }
+    }
+
     public static boolean getAssertionResult(Assert assertion, String realType, String realValue) {
         if (!assertion.getExtractType().equals(realType)) {
             return false;

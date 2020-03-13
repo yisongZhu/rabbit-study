@@ -1,12 +1,19 @@
 package com.rabbit.utils;
 
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
+import com.rabbit.model.po.ApiParam;
+import com.rabbit.utils.apitest.ApiUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 public class MyStringUtils {
     /**
      * 根据正则提取参数
@@ -36,6 +43,27 @@ public class MyStringUtils {
         return value;
     }
 
+    public static String changeString(String json, List<ApiParam> bParams) {
+        DocumentContext ext = null;
+        try {
+            ext = com.jayway.jsonpath.JsonPath.parse(json);
+        } catch (Exception e) {
+            return json;
+        }
+        if (bParams != null) {
+            for (ApiParam apiParam : bParams) {
+                if (apiParam.getKey().equals("$")) {
+                    json = ApiUtil.getRealObj(json, apiParam.getType()).toString();
+                } else if (apiParam.getKey().startsWith("$")) {
+                    JsonPath p = JsonPath.compile(apiParam.getKey());
+                    ext.set(p, ApiUtil.getRealObj(apiParam.getValue(), apiParam.getType()));
+                }
+            }
+        }
+        json = ext.jsonString();
+        return json;
+    }
+
     public static String replaceKeyFromMap(String string, Map gVars, Map cVars) {
         return replaceGvFromMap(replaceFromMap(string, cVars), gVars);
     }
@@ -57,13 +85,32 @@ public class MyStringUtils {
         Matcher matcher = regex.matcher(string);
         while (matcher.find()) {
             String varKey = matcher.group(1);
-            Object varValue = map.get(varKey) == null ? varKey : map.get(varKey).toString();
-//            System.out.println(escapeExprSpecialWord(varKey));
+            int index = varKey.indexOf("|");
+            String keyKey = "";
+            String keyValue = "";
+            if (index != -1) {
+                keyKey = varKey.substring(0, index);
+                keyValue = varKey.substring(index + 1);
+            } else {
+                keyKey = varKey;
+                keyValue = "";
+            }
             try {
-                string = string.replaceAll("\\$\\{" + escapeExprSpecialWord(varKey) + "\\}", escapeExprSpecialWord(varValue.toString()));
+                if (!map.containsKey(keyKey)) {
+                    string = string.replaceAll("\\$\\{" + escapeExprSpecialWord(varKey) + "\\}", keyValue);
+                } else {
+                    string = string.replaceAll("\\$\\{" + escapeExprSpecialWord(varKey) + "\\}", escapeExprSpecialWord(map.get(keyKey).toString()));
+                }
             } catch (Exception e) {
                 continue;
             }
+//            Object varValue = map.get(varKey) == null ? varKey : map.get(varKey).toString();
+////            System.out.println(escapeExprSpecialWord(varKey));
+//            try {
+//                string = string.replaceAll("\\$\\{" + escapeExprSpecialWord(varKey) + "\\}", escapeExprSpecialWord(varValue.toString()));
+//            } catch (Exception e) {
+//                continue;
+//            }
         }
         return string;
     }
@@ -80,13 +127,31 @@ public class MyStringUtils {
         Matcher matcher = regex.matcher(string);
         while (matcher.find()) {
             String varKey = matcher.group(1);
-            Object varValue = map.get(varKey) == null ? varKey : map.get(varKey).toString();
-//            System.out.println(escapeExprSpecialWord(varKey));
+            int index = varKey.indexOf("|");
+            String keyKey = "";
+            String keyValue = "";
+            if (index != -1) {
+                keyKey = varKey.substring(0, index);
+                keyValue = varKey.substring(index + 1);
+            } else {
+                keyKey = varKey;
+                keyValue = "";
+            }
             try {
-                string = string.replaceAll("\\@\\{" + escapeExprSpecialWord(varKey) + "\\}", escapeExprSpecialWord(varValue.toString()));
+                if (!map.containsKey(keyKey)) {
+                    string = string.replaceAll("\\@\\{" + escapeExprSpecialWord(varKey) + "\\}", keyValue);
+                } else {
+                    string = string.replaceAll("\\@\\{" + escapeExprSpecialWord(varKey) + "\\}", escapeExprSpecialWord(map.get(keyKey).toString()));
+                }
             } catch (Exception e) {
                 continue;
             }
+//            Object varValue = map.get(varKey) == null ? varKey : map.get(varKey).toString();
+//            try {
+//                string = string.replaceAll("\\@\\{" + escapeExprSpecialWord(varKey) + "\\}", escapeExprSpecialWord(varValue.toString()));
+//            } catch (Exception e) {
+//                continue;
+//            }
         }
         return string;
     }
@@ -134,7 +199,7 @@ public class MyStringUtils {
                 keyValue = "";
             }
             try {
-                if (map.get(keyKey) == null) {
+                if (!map.containsKey(keyKey)) {
                     string = string.replaceAll("#\\{" + escapeExprSpecialWord(varKey) + "\\}", keyValue);
                 } else {
                     string = string.replaceAll("#\\{" + escapeExprSpecialWord(varKey) + "\\}", escapeExprSpecialWord(map.get(keyKey).toString()));

@@ -1,6 +1,10 @@
 package com.rabbit.myTest;
 
+
+import com.jayway.jsonpath.DocumentContext;
 import io.restassured.path.json.JsonPath;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Test;
 
 public class NetTest {
@@ -13,5 +17,23 @@ public class NetTest {
         System.out.println(o);
     }
 
+    @Test
+    public void test3() throws Exception {
+        String json = "[\n" +
+                "\t\t{\n" +
+                "\t\t\"c\":1,\n" +
+                "\t\t\"e\":\"evule\"\n" +
+                "\t\t},\n" +
+                "\t\t{\n" +
+                "\t\t\"c\":1,\n" +
+                "\t\t\"e\":\"evule\"\n" +
+                "\t\t}\n" +
+                "\t]";
+        DocumentContext ext = com.jayway.jsonpath.JsonPath.parse(json);
+        com.jayway.jsonpath.JsonPath p = com.jayway.jsonpath.JsonPath.compile("$[0].e");
+        ext.set(p, 1111);
+        String author = ext.jsonString();
+        System.out.println(author);
+    }
 
 }

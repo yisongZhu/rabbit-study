@@ -1,6 +1,9 @@
 package com.rabbit.dao;
 
-import com.rabbit.model.TStepApi;import org.apache.ibatis.annotations.Param;import java.util.List;
+import com.rabbit.model.TStepApi;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface TStepApiMapper {
     int deleteByPrimaryKey(Long id);
@@ -20,4 +23,8 @@ public interface TStepApiMapper {
     Integer findMaxSortByTestcaseId(@Param("testcaseId") Long testcaseId);
 
     int deleteByTestcaseId(@Param("testcaseId") Long testcaseId);
+
+    List<TStepApi> findByTypeAndSourceId(@Param("type") Integer type, @Param("sourceId") Long sourceId);
+
+
 }

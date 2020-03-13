@@ -3,14 +3,12 @@ package com.rabbit.service.Impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
+import com.rabbit.dao.TStepApiMapper;
 import com.rabbit.dto.StepUiNewDto;
-import com.rabbit.model.Result;
-import com.rabbit.model.TApiResult;
-import com.rabbit.model.TTestDatabese;
+import com.rabbit.model.*;
 import com.rabbit.model.po.Action;
-import com.rabbit.service.RequestExecutorServer;
-import com.rabbit.service.TFileInfoService;
-import com.rabbit.service.TTestDatabeseService;
+import com.rabbit.model.po.ApiParam;
+import com.rabbit.service.*;
 import com.rabbit.utils.MyStringUtils;
 import com.rabbit.utils.apitest.ApiKeywords;
 import lombok.extern.slf4j.Slf4j;
@@ -19,9 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
-import com.rabbit.model.TApi;
 import com.rabbit.dao.TApiMapper;
-import com.rabbit.service.TApiService;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
@@ -43,9 +39,16 @@ public class TApiServiceImpl implements TApiService {
     @Resource
     private RequestExecutorServer requestExecutorServer;
 
+    @Resource
+    private TStepApiMapper stepApiMapper;
+
     @Override
     @Transactional
     public int deleteByPrimaryKey(Long id) {
+        List<TStepApi> byTypeAndSourceId = stepApiMapper.findByTypeAndSourceId(1, id);
+        if (byTypeAndSourceId != null && byTypeAndSourceId.size() > 0) {
+            throw new IllegalArgumentException("该接口已经被用例引用，请先删除用例");
+        }
         fileInfoService.deleteBySourceTypeAndSourceId(2, id);
         return tApiMapper.deleteByPrimaryKey(id);
     }
@@ -98,8 +101,8 @@ public class TApiServiceImpl implements TApiService {
 
 
     @Override
-    public TApiResult excApi(TApi api, Map<String, Object> gVars, Map<String, Object> caseVars, Map<String, Object> apiParams) {
-        return requestExecutorServer.executeHttpRequest(api, gVars, caseVars, apiParams);
+    public TApiResult excApi(TApi api, Map<String, Object> gVars, Map<String, Object> caseVars, List<ApiParam> params) {
+        return requestExecutorServer.executeHttpRequest(api, gVars, caseVars, params);
     }
 
     @Override

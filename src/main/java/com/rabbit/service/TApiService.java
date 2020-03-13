@@ -5,6 +5,7 @@ import com.rabbit.model.Result;
 import com.rabbit.model.TApi;
 import com.rabbit.model.TApiResult;
 import com.rabbit.model.po.Action;
+import com.rabbit.model.po.ApiParam;
 
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ public interface TApiService {
 
     Result runAction(Action action, Map<String, Object> gVars, Map<String, Object> caseVars);
 
-    TApiResult excApi(TApi api, Map<String, Object> gVars, Map<String, Object> caseVars, Map<String, Object> apiParams);
+    TApiResult excApi(TApi api, Map<String, Object> gVars, Map<String, Object> caseVars,List<ApiParam> params);
 }
 
 

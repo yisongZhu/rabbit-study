@@ -163,11 +163,15 @@ public class TTestcaseApiServiceImpl implements TTestcaseApiService {
             if (stepApiDto.getStatus() == 0) {
                 continue;
             }
-            TApi tApi = new TApi();
-            BeanUtils.copyProperties(stepApiDto, tApi);
+            TApi tApi = stepApiDto.getApi();
+            stepApiDto.setMethod(stepApiDto.getApi().getMethod());
             tApi.setEnvId(testcaseApi.getEnvId());
-            Map<String, Object> apiParams = new ConcurrentHashMap<>();
-            TApiResult tApiResult = apiService.excApi(tApi, gVars, caseVars, apiParams);
+
+            tApi.setBeforeExcs(stepApiDto.getBeforeExcs());
+            tApi.setReqAssert(stepApiDto.getReqAssert());
+            tApi.setReqExtract(stepApiDto.getReqExtract());
+
+            TApiResult tApiResult = apiService.excApi(tApi, gVars, caseVars, stepApiDto.getApiParams());
             if (tApiResult.getResultType().equals(1)) {
                 success = success + 1;
             } else {

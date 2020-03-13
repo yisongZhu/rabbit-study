@@ -2,9 +2,11 @@ package com.rabbit.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.rabbit.model.*;
+import com.rabbit.model.po.ApiParam;
 import com.rabbit.service.GlobalParamService;
 import com.rabbit.service.TApiService;
 import com.rabbit.service.TApiSuiteService;
+import com.rabbit.service.TStepApiService;
 import com.rabbit.utils.FastJSONHelper;
 import com.rabbit.utils.UserUtil;
 import io.swagger.annotations.Api;
@@ -13,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -117,6 +120,7 @@ public class ApiController {
     @PostMapping("/remove")
     @ApiOperation(value = "删除")
     public ResponseInfo delTApi(@RequestBody TApi tApi) {
+
         tApiService.deleteByPrimaryKey(tApi.getId());
         return new ResponseInfo(true, "删除接口成功");
     }
@@ -133,9 +137,9 @@ public class ApiController {
     public ResponseInfo debugTApi(@RequestBody TApi api) {
         Map<String, Object> gVars = globalParamService.findByProjectIdAndTypeAndEnvId(api.getProjectId(), 2, api.getEnvId());
         Map<String, Object> caseVars = new ConcurrentHashMap<>();
-        Map<String, Object> apiParams = new ConcurrentHashMap<>();
+        List<ApiParam> params = new ArrayList<>();
         try {
-            TApiResult TApiResult = tApiService.excApi(api, gVars, caseVars,apiParams);
+            TApiResult TApiResult = tApiService.excApi(api, gVars, caseVars, params);
             return new ResponseInfo(true, TApiResult);
         } catch (Exception e) {
             log.error("debug出错：", e);
