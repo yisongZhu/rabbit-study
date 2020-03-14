@@ -254,7 +254,8 @@
                 and fail_continue=#{failContinue,jdbcType=INTEGER}
             </if>
             <if test="flags != null and flags != ''">
-                <foreach collection="flags.split(',')" item="item" index="index" open="and (" close=")">
+                <bind name="bindeName" value="flags.split(',')"/>
+                <foreach collection="bindeName" item="item" index="index" open="and (" close=")">
                     <if test="index == 0">
                         FIND_IN_SET(#{item},flags)
                     </if>

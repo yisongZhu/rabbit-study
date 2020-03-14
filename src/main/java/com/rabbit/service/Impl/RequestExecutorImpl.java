@@ -46,30 +46,20 @@ public class RequestExecutorImpl implements RequestExecutorServer {
     @Override
     public TApiResult executeHttpRequest(TApi tApi, Map<String, Object> gVars, Map<String, Object> caseVars, List<ApiParam> params) {
         TApiResult tApiResult = new TApiResult();
-        Map<String, Object> mParams = new ConcurrentHashMap();
-        if (params != null) {
-            for (ApiParam apiParam : params) {
-                apiParam.setValue(MyStringUtils.replaceKeyFromMap(apiParam.getValue(), gVars, caseVars));
-                //如果参数的key以$开头则判断为body参数否则为模板参数
-                if (!apiParam.getKey().startsWith("$")) {
-                    mParams.put(apiParam.getKey(), apiParam.getValue());
-                }
-            }
-        }
 
         beforeHandle(tApi, gVars, caseVars);
         tApiResult.setCreateTime(new Date());
         RequestSpecification requestSpecification = given();
         trustAllHosts(requestSpecification);
-        applyHeaders(requestSpecification, tApi, gVars, caseVars, tApiResult, mParams);
-        applyQueryParameters(requestSpecification, tApi, gVars, caseVars, tApiResult, mParams);
+        applyHeaders(requestSpecification, tApi, gVars, caseVars, tApiResult);
+        applyQueryParameters(requestSpecification, tApi, gVars, caseVars, tApiResult, params);
         log.info("开始请求执行接口");
-        tApi.setDomain(MyStringUtils.replaceKeyFromMap(tApi.getDomain(), gVars, caseVars, mParams));
+        tApi.setDomain(MyStringUtils.replaceKeyFromMap(tApi.getDomain(), gVars, caseVars));
         tApiResult.setReqMethod(tApi.getMethod());
         if (!tApi.getMethod().equalsIgnoreCase("get")) {
             tApiResult.setReqBodyType(tApi.getReqBodyType());
             if (tApi.getReqBodyType().equals("form")) {
-                applyFormParam(requestSpecification, tApi, gVars, caseVars, tApiResult, mParams);
+                applyFormParam(requestSpecification, tApi, gVars, caseVars, tApiResult, params);
             } else if (tApi.getReqBodyType().equals("raw")) {
                 applyRawParam(requestSpecification, tApi, gVars, caseVars, tApiResult, params);
             }
@@ -82,7 +72,7 @@ public class RequestExecutorImpl implements RequestExecutorServer {
         if (url.indexOf("?") != -1) {
             url = url.substring(0, url.indexOf("?"));
         }
-        url = MyStringUtils.replaceKeyFromMap(url, gVars, caseVars, mParams);
+        url = MyStringUtils.replaceKeyFromMap(url, gVars, caseVars);
         url.replaceAll("/", "\\/");
         tApiResult.setReqUrl(url);
         try {
@@ -173,10 +163,10 @@ public class RequestExecutorImpl implements RequestExecutorServer {
         requestSpecification.config(RestAssured.config);
     }
 
-    private void applyHeaders(RequestSpecification requestSpecification, TApi tApi, Map<String, Object> gVars, Map<String, Object> caseVars, TApiResult TApiResult, Map<String, Object> mParams) {
+    private void applyHeaders(RequestSpecification requestSpecification, TApi tApi, Map<String, Object> gVars, Map<String, Object> caseVars, TApiResult TApiResult) {
         List<com.rabbit.model.po.Header> headers = tApi.getReqHeader();
         for (com.rabbit.model.po.Header header : headers) {
-            header.setValue(MyStringUtils.replaceKeyFromMap(header.getValue(), gVars, caseVars, mParams));
+            header.setValue(MyStringUtils.replaceKeyFromMap(header.getValue(), gVars, caseVars));
             if (header.getKey().equalsIgnoreCase("cookie")) {
                 String[] cookies = header.getValue().split(";");
                 for (String cookie : cookies) {
@@ -194,11 +184,16 @@ public class RequestExecutorImpl implements RequestExecutorServer {
         TApiResult.setReqHeaders(headers);
     }
 
-    private void applyQueryParameters(RequestSpecification requestSpecification, TApi tApi, Map<String, Object> gVars, Map<String, Object> caseVars, TApiResult TApiResult, Map<String, Object> mParams) {
+    private void applyQueryParameters(RequestSpecification requestSpecification, TApi tApi, Map<String, Object> gVars, Map<String, Object> caseVars, TApiResult TApiResult, List<ApiParam> params) {
         List<Query> reqQuerys = tApi.getReqQuery();
         try {
             for (Query reqQuery : reqQuerys) {
-                reqQuery.setValue(MyStringUtils.replaceKeyFromMap(reqQuery.getValue(), gVars, caseVars, mParams));
+                ApiParam apiParam = params.stream().filter(item -> item.getKey().equals("%." + reqQuery.getKey())).findFirst().orElse(null);
+                if (apiParam == null) {
+                    reqQuery.setValue(MyStringUtils.replaceKeyFromMap(reqQuery.getValue(), gVars, caseVars));
+                } else {
+                    reqQuery.setValue(MyStringUtils.replaceKeyFromMap(apiParam.getValue(), gVars, caseVars));
+                }
                 requestSpecification.queryParam(reqQuery.getKey(), URLDecoder.decode(reqQuery.getValue()));
             }
             TApiResult.setReqQuery(tApi.getReqQuery());
@@ -207,11 +202,35 @@ public class RequestExecutorImpl implements RequestExecutorServer {
         }
     }
 
-    private void applyFormParam(RequestSpecification requestSpecification, TApi tApi, Map<String, Object> gVars, Map<String, Object> caseVars, TApiResult TApiResult, Map<String, Object> mParams) {
+    private void applyFormParam(RequestSpecification requestSpecification, TApi tApi, Map<String, Object> gVars, Map<String, Object> caseVars, TApiResult TApiResult, List<ApiParam> params) {
         try {
             List<BodyData> reqBodyDatas = tApi.getReqBodyData();
+            Map<String, Integer> formDataKeyNo = new HashMap();
             for (BodyData reqBodyData : reqBodyDatas) {
-                reqBodyData.setValue(MyStringUtils.replaceKeyFromMap(reqBodyData.getValue(), gVars, caseVars, mParams));
+                //每个key计数器
+                Integer integer = formDataKeyNo.get(reqBodyData.getKey());
+                if (integer == null) {
+                    formDataKeyNo.put(reqBodyData.getKey(), 0);
+                } else {
+                    formDataKeyNo.put(reqBodyData.getKey(), integer + 1);
+                }
+
+                String realKey = "#[" + formDataKeyNo.get(reqBodyData.getKey()) + "]." + reqBodyData.getKey();
+                ApiParam apiParam = params.stream()
+                        .filter(item -> {
+                            String paramKey = item.getKey();
+                            if (paramKey.startsWith("#.")) {
+                                paramKey = paramKey.replaceFirst("#\\.", "#\\[0\\]\\.");
+                            }
+                            return paramKey.equals(realKey);
+                        })
+                        .findFirst().orElse(null);
+                if (apiParam == null) {
+                    reqBodyData.setValue(MyStringUtils.replaceKeyFromMap(reqBodyData.getValue(), gVars, caseVars));
+                } else {
+                    reqBodyData.setValue(MyStringUtils.replaceKeyFromMap(apiParam.getValue(), gVars, caseVars));
+                }
+
                 if (reqBodyData.getType().equals("file")) {
                     String absolutePath = fileInfoService.getAbsolutePath(2, tApi.getId(), reqBodyData.getValue());
                     log.info("导入的文件名称为：{}", absolutePath);
