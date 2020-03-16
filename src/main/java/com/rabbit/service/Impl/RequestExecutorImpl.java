@@ -47,6 +47,10 @@ public class RequestExecutorImpl implements RequestExecutorServer {
     public TApiResult executeHttpRequest(TApi tApi, Map<String, Object> gVars, Map<String, Object> caseVars, List<ApiParam> params) {
         TApiResult tApiResult = new TApiResult();
 
+        for (ApiParam apiParam : params) {
+            apiParam.setValue(MyStringUtils.replaceKeyFromMap(apiParam.getValue(), gVars, caseVars));
+        }
+
         beforeHandle(tApi, gVars, caseVars);
         tApiResult.setCreateTime(new Date());
         RequestSpecification requestSpecification = given();
@@ -188,7 +192,7 @@ public class RequestExecutorImpl implements RequestExecutorServer {
         List<Query> reqQuerys = tApi.getReqQuery();
         try {
             for (Query reqQuery : reqQuerys) {
-                ApiParam apiParam = params.stream().filter(item -> item.getKey().equals("%." + reqQuery.getKey())).findFirst().orElse(null);
+                ApiParam apiParam = params.stream().filter(item -> item.getKey().equals("#." + reqQuery.getKey())).findFirst().orElse(null);
                 if (apiParam == null) {
                     reqQuery.setValue(MyStringUtils.replaceKeyFromMap(reqQuery.getValue(), gVars, caseVars));
                 } else {
@@ -215,16 +219,15 @@ public class RequestExecutorImpl implements RequestExecutorServer {
                     formDataKeyNo.put(reqBodyData.getKey(), integer + 1);
                 }
 
-                String realKey = "#[" + formDataKeyNo.get(reqBodyData.getKey()) + "]." + reqBodyData.getKey();
+                String realKey = "$[" + formDataKeyNo.get(reqBodyData.getKey()) + "]." + reqBodyData.getKey();
                 ApiParam apiParam = params.stream()
                         .filter(item -> {
                             String paramKey = item.getKey();
-                            if (paramKey.startsWith("#.")) {
-                                paramKey = paramKey.replaceFirst("#\\.", "#\\[0\\]\\.");
+                            if (paramKey.startsWith("$.")) {
+                                paramKey = paramKey.replaceFirst("\\$\\.", "\\$[0].");
                             }
                             return paramKey.equals(realKey);
-                        })
-                        .findFirst().orElse(null);
+                        }).findFirst().orElse(null);
                 if (apiParam == null) {
                     reqBodyData.setValue(MyStringUtils.replaceKeyFromMap(reqBodyData.getValue(), gVars, caseVars));
                 } else {

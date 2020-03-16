@@ -68,7 +68,18 @@ public class ProjectServiceImpl implements ProjectService {
     public List<Project> listByUserId(Long userId) {
         return projectMapper.listByUserId(userId);
     }
+
+    @Override
+    public int insert(Project record) {
+        return projectMapper.insert(record);
+    }
+
+    @Override
+    public int updateByPrimaryKeySelective(Project record) {
+        return projectMapper.updateByPrimaryKeySelective(record);
+    }
 }
+
 
 
 

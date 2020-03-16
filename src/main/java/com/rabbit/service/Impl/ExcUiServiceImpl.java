@@ -56,6 +56,8 @@ public class ExcUiServiceImpl implements ExcUiService {
     @Value("${server.port}")
     private String webPort;
 
+    @Value("${rabbit.reportEmailDoman}")
+    private String reportEmailDoman;
 
     @Override
     public String excJob(Job job) {
@@ -130,7 +132,11 @@ public class ExcUiServiceImpl implements ExcUiService {
             uiTemplateParams.setCreateTime(DateUtil.format(createTime, "yyyy-MM-dd HH:mm:ss"));
             uiTemplateParams.setJobname(planLogName);
 //            uiTemplateParams.setWebip(InetAddress.getLocalHost().getHostAddress());
-            uiTemplateParams.setWebip(NetUtil.getLocalIpv4Address());
+            if (reportEmailDoman == null || reportEmailDoman == "") {
+                uiTemplateParams.setWebip(NetUtil.getLocalIpv4Address());
+            } else {
+                uiTemplateParams.setWebip(reportEmailDoman);
+            }
             uiTemplateParams.setWebport(webPort);
             uiTemplateParams.setContextpath(contextPath);
             uiTemplateParams.setBusinesscount(businesscount);

@@ -5,9 +5,13 @@ import com.rabbit.model.Project;import org.apache.ibatis.annotations.Delete;impo
 public interface ProjectMapper {
     int deleteByPrimaryKey(Long id);
 
+    int insert(Project record);
+
     int insertSelective(Project record);
 
     Project selectByPrimaryKey(Long id);
+
+    int updateByPrimaryKeySelective(Project record);
 
     int updateByPrimaryKey(Project record);
 

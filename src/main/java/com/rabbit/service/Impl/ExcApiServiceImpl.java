@@ -45,6 +45,9 @@ public class ExcApiServiceImpl implements ExcApiService {
     @Value("${server.port}")
     private String webPort;
 
+    @Value("${rabbit.reportEmailDoman}")
+    private String reportEmailDoman;
+
 
     private static String EMAIL_REGEX = "^[a-z0-9A-Z]+[- | a-z0-9A-Z . _]+@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-z]{2,}$";
 
@@ -172,7 +175,11 @@ public class ExcApiServiceImpl implements ExcApiService {
             uiTemplateParams.setCreateTime(DateUtil.format(createTime, "yyyy-MM-dd HH:mm:ss"));
             uiTemplateParams.setJobname(planLogName);
 //            uiTemplateParams.setWebip(InetAddress.getLocalHost().getHostAddress());
-            uiTemplateParams.setWebip(NetUtil.getLocalIpv4Address());
+            if (reportEmailDoman == null || reportEmailDoman == "") {
+                uiTemplateParams.setWebip(NetUtil.getLocalIpv4Address());
+            } else {
+                uiTemplateParams.setWebip(reportEmailDoman);
+            }
             uiTemplateParams.setWebport(webPort);
             uiTemplateParams.setContextpath(contextPath);
             uiTemplateParams.setBusinesscount(businesscount);

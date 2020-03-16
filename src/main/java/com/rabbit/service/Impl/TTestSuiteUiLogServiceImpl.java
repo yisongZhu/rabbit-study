@@ -1,12 +1,15 @@
 package com.rabbit.service.Impl;
 
 import org.springframework.stereotype.Service;
+
 import javax.annotation.Resource;
+
 import com.rabbit.model.TTestSuiteUiLog;
 import com.rabbit.dao.TTestSuiteUiLogMapper;
 import com.rabbit.service.TTestSuiteUiLogService;
+
 @Service
-public class TTestSuiteUiLogServiceImpl implements TTestSuiteUiLogService{
+public class TTestSuiteUiLogServiceImpl implements TTestSuiteUiLogService {
 
     @Resource
     private TTestSuiteUiLogMapper tTestSuiteUiLogMapper;
@@ -25,11 +28,19 @@ public class TTestSuiteUiLogServiceImpl implements TTestSuiteUiLogService{
     public int insertSelective(TTestSuiteUiLog record) {
         return tTestSuiteUiLogMapper.insertSelective(record);
     }
+
     @Override
     public Long insertSelectiveReturnKey(TTestSuiteUiLog record) {
-         tTestSuiteUiLogMapper.insertSelective(record);
+        tTestSuiteUiLogMapper.insertSelective(record);
         return record.getId();
     }
+
+    @Override
+    public TTestSuiteUiLog insertSelectiveReturnObj(TTestSuiteUiLog record) {
+        tTestSuiteUiLogMapper.insertSelective(record);
+        return record;
+    }
+
     @Override
     public TTestSuiteUiLog selectByPrimaryKey(Long id) {
         return tTestSuiteUiLogMapper.selectByPrimaryKey(id);

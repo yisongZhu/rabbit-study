@@ -13,6 +13,8 @@ public interface TTestSuiteUiLogService {
 
     Long insertSelectiveReturnKey(TTestSuiteUiLog record);
 
+    TTestSuiteUiLog insertSelectiveReturnObj(TTestSuiteUiLog record);
+
     TTestSuiteUiLog selectByPrimaryKey(Long id);
 
     int updateByPrimaryKeySelective(TTestSuiteUiLog record);

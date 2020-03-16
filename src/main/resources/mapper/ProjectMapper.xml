@@ -3,9 +3,11 @@
 <mapper namespace="com.rabbit.dao.ProjectMapper">
   <resultMap id="BaseResultMap" type="com.rabbit.model.Project">
     <!--@mbg.generated-->
+    <!--@Table sys_project-->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="project_name" jdbcType="VARCHAR" property="projectName" />
     <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="platform" jdbcType="INTEGER" property="platform" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
@@ -13,7 +15,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    id, project_name, description, create_time, update_time, create_by, update_by
+    id, project_name, description, platform, create_time, update_time, create_by, update_by
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     <!--@mbg.generated-->
@@ -27,18 +29,27 @@
     delete from sys_project
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insertSelective" parameterType="com.rabbit.model.Project">
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.rabbit.model.Project" useGeneratedKeys="true">
+    <!--@mbg.generated-->
+    insert into sys_project (project_name, description, platform, 
+      create_time, update_time, create_by, 
+      update_by)
+    values (#{projectName,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{platform,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
+      #{updateBy,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.rabbit.model.Project" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into sys_project
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="projectName != null and projectName != ''">
         project_name,
       </if>
       <if test="description != null and description != ''">
         description,
+      </if>
+      <if test="platform != null">
+        platform,
       </if>
       <if test="createTime != null">
         create_time,
@@ -54,14 +65,14 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
-      </if>
       <if test="projectName != null and projectName != ''">
         #{projectName,jdbcType=VARCHAR},
       </if>
       <if test="description != null and description != ''">
         #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="platform != null">
+        #{platform,jdbcType=INTEGER},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -77,11 +88,43 @@
       </if>
     </trim>
   </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.rabbit.model.Project">
+    <!--@mbg.generated-->
+    update sys_project
+    <set>
+      <if test="projectName != null and projectName != ''">
+        project_name = #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null and description != ''">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="platform != null">
+        platform = #{platform,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null and createBy != ''">
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateBy != null and updateBy != ''">
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
   <update id="updateByPrimaryKey" parameterType="com.rabbit.model.Project">
     <!--@mbg.generated-->
     update sys_project
     set project_name = #{projectName,jdbcType=VARCHAR},
       description = #{description,jdbcType=VARCHAR},
+      platform = #{platform,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=VARCHAR},
       update_by = #{updateBy,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>

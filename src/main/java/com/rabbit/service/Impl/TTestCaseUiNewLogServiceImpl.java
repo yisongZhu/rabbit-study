@@ -6,7 +6,9 @@ import com.rabbit.dao.TTestcaseUiNewDtoMapper;
 import com.rabbit.dto.TestcaseUiNewDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import javax.annotation.Resource;
+
 import com.rabbit.dao.TTestCaseUiNewLogMapper;
 import com.rabbit.model.TTestCaseUiNewLog;
 import com.rabbit.service.TTestCaseUiNewLogService;
@@ -34,8 +36,14 @@ public class TTestCaseUiNewLogServiceImpl implements TTestCaseUiNewLogService {
 
     @Override
     public Long insertSelectiveReturnKey(TTestCaseUiNewLog record) {
-         tTestCaseUiNewLogMapper.insertSelective(record);
+        tTestCaseUiNewLogMapper.insertSelective(record);
         return record.getId();
+    }
+
+    @Override
+    public TTestCaseUiNewLog insertSelectiveReturnObj(TTestCaseUiNewLog record) {
+        tTestCaseUiNewLogMapper.insertSelective(record);
+        return record;
     }
 
     @Override

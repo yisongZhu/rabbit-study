@@ -26,6 +26,8 @@ public interface TStepApiService {
 
     void saveSteps(List<StepApiDto> testSteps);
 
+    void copyStep(TStepApi testStep);
+
     List<TStepApi> findByTestcaseId(Long testcaseId);
 }
 

@@ -107,6 +107,14 @@ public class ApiTestCaseController {
         return new ResponseInfo(true, testcaseApiService.selectDtoByIdAndCaseType(id, 2));
     }
 
+    @PostMapping("/copyStep")
+    @ApiOperation(value = "复制单条测试步骤")
+    public ResponseInfo copyStep(@RequestBody TStepApi stepApi) {
+        stepApiService.copyStep(stepApi);
+        return new ResponseInfo(true, "复制步骤成功");
+    }
+
+
     @PostMapping("/debug")
     @ApiOperation(value = "debug用例")
     public ResponseInfo debug(@RequestBody TestcaseApiDto testcaseApi) {

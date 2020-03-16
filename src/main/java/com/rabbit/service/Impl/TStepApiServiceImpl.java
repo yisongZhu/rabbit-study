@@ -5,7 +5,9 @@ import com.rabbit.dto.StepApiDto;
 import com.rabbit.model.TTestcaseApi;
 import com.rabbit.service.TFileInfoService;
 import com.rabbit.service.TTestcaseApiService;
+import com.rabbit.utils.BeanUtils;
 import com.rabbit.utils.UserUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +18,11 @@ import com.rabbit.dao.TStepApiMapper;
 import com.rabbit.service.TStepApiService;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class TStepApiServiceImpl implements TStepApiService {
 
     @Resource
@@ -111,6 +115,27 @@ public class TStepApiServiceImpl implements TStepApiService {
     @Override
     public List<TStepApi> findByTestcaseId(Long testcaseId) {
         return tStepApiMapper.findByTestcaseId(testcaseId);
+    }
+
+    @Override
+    @Transactional
+    public void copyStep(TStepApi testStep) {
+        List<TStepApi> byTestcaseId = tStepApiMapper.findByTestcaseId(testStep.getTestcaseId());
+        List<StepApiDto> newSteps = new ArrayList<>();
+        if (byTestcaseId != null) {
+            for (TStepApi stepApi : byTestcaseId) {
+                StepApiDto stepApiDto = new StepApiDto();
+                BeanUtils.copyBeanProp(stepApiDto, stepApi);
+                newSteps.add(stepApiDto);
+                if (testStep.getId().equals(stepApi.getId())) {
+                    StepApiDto stepApiDto1 = new StepApiDto();
+                    BeanUtils.copyBeanProp(stepApiDto1, stepApi);
+                    stepApiDto1.setId(null);
+                    newSteps.add(stepApiDto1);
+                }
+            }
+        }
+        saveSteps(newSteps);
     }
 }
 

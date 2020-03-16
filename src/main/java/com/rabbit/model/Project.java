@@ -12,6 +12,11 @@ public class Project implements Serializable {
 
     private String description;
 
+    /**
+     * 1.andorid 2.iOS
+     */
+    private Integer platform;
+
     private Date createTime;
 
     private Date updateTime;

@@ -15,6 +15,8 @@ public interface TTestCaseUiNewLogService {
 
     Long insertSelectiveReturnKey(TTestCaseUiNewLog record);
 
+    TTestCaseUiNewLog insertSelectiveReturnObj(TTestCaseUiNewLog record);
+
     TTestCaseUiNewLog selectByPrimaryKey(Long id);
 
     int updateByPrimaryKeySelective(TTestCaseUiNewLog record);

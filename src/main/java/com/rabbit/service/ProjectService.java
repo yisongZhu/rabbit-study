@@ -24,7 +24,12 @@ public interface ProjectService {
     List<Project> findByProjectNameAndIdNot(String projectName, Long notId);
 
     List<Project> listByUserId(Long userId);
+
+    int insert(Project record);
+
+    int updateByPrimaryKeySelective(Project record);
 }
+
 
 
 
