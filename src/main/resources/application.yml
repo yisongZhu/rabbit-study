@@ -3,8 +3,10 @@ rabbit:
   #文件映射路径
   profile: /profile
   jmeterfile: /profile/jmeter
+  uifile: /profile/UI
   appfile: /profile/app
-
+  systemfile: /profile/system
+  reportEmailDoman:
 server:
   port: 8889
   servlet:
@@ -26,6 +28,8 @@ server:
 #      rotate: true
 #      suffix: .log
 spring:
+#  profiles:
+#    active: dev
   datasource:
       type: com.alibaba.druid.pool.DruidDataSource
       #druid相关配置
@@ -90,8 +94,8 @@ spring:
   mail:
     default-encoding: UTF-8
     host: smtp.163.com
-    username: 
-    password: 
+    username: 111111@163.com  #smtp邮箱地址，不是你自己的邮箱，如何申请请百度
+    password:  #smtp邮箱密码
     protocol: smtp
     test-connection: false
 #  boot:
