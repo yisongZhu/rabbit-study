@@ -120,7 +120,6 @@ public class ApiController {
     @PostMapping("/remove")
     @ApiOperation(value = "删除")
     public ResponseInfo delTApi(@RequestBody TApi tApi) {
-
         tApiService.deleteByPrimaryKey(tApi.getId());
         return new ResponseInfo(true, "删除接口成功");
     }

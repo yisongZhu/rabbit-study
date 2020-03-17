@@ -10,6 +10,7 @@ import com.rabbit.dto.TestcaseApiDto;
 import com.rabbit.model.*;
 import com.rabbit.model.po.CaseVar;
 import com.rabbit.service.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
+@Slf4j
 @Service
 public class TTestcaseApiServiceImpl implements TTestcaseApiService {
 
@@ -164,9 +165,8 @@ public class TTestcaseApiServiceImpl implements TTestcaseApiService {
                 continue;
             }
             TApi tApi = stepApiDto.getApi();
-            stepApiDto.setMethod(stepApiDto.getApi().getMethod());
-            tApi.setEnvId(testcaseApi.getEnvId());
 
+            tApi.setEnvId(testcaseApi.getEnvId());
             tApi.setBeforeExcs(stepApiDto.getBeforeExcs());
             tApi.setReqAssert(stepApiDto.getReqAssert());
             tApi.setReqExtract(stepApiDto.getReqExtract());
