@@ -44,13 +44,13 @@ public class MyStringUtils {
     }
 
     public static String changeString(String json, List<ApiParam> bParams) {
-        DocumentContext ext = null;
-        try {
-            ext = com.jayway.jsonpath.JsonPath.parse(json);
-        } catch (Exception e) {
-            return json;
-        }
-        if (bParams != null) {
+        if (bParams != null && bParams.size() > 0) {
+            DocumentContext ext = null;
+            try {
+                ext = com.jayway.jsonpath.JsonPath.parse(json);
+            } catch (Exception e) {
+                return json;
+            }
             for (ApiParam apiParam : bParams) {
                 if (apiParam.getKey().equals("$")) {
                     json = ApiUtil.getRealObj(json, apiParam.getType()).toString();
@@ -59,8 +59,8 @@ public class MyStringUtils {
                     ext.set(p, ApiUtil.getRealObj(apiParam.getValue(), apiParam.getType()));
                 }
             }
+            json = ext.jsonString();
         }
-        json = ext.jsonString();
         return json;
     }
 

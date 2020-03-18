@@ -27,9 +27,7 @@ import java.net.ConnectException;
 import java.net.URLDecoder;
 import java.net.UnknownHostException;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
-import static io.restassured.RestAssured.given;
 import static io.restassured.config.JsonConfig.jsonConfig;
 import static io.restassured.config.SSLConfig.sslConfig;
 import static io.restassured.path.json.config.JsonPathConfig.NumberReturnType.BIG_DECIMAL;
@@ -54,7 +52,7 @@ public class RequestExecutorImpl implements RequestExecutorServer {
 
         beforeHandle(tApi, gVars, caseVars);
         tApiResult.setCreateTime(new Date());
-        RequestSpecification requestSpecification = given();
+        RequestSpecification requestSpecification = RestAssured.given();
         trustAllHosts(requestSpecification);
         applyHeaders(requestSpecification, tApi, gVars, caseVars, tApiResult, params);
         applyQueryParameters(requestSpecification, tApi, gVars, caseVars, tApiResult, params);
@@ -78,7 +76,7 @@ public class RequestExecutorImpl implements RequestExecutorServer {
             url = url.substring(0, url.indexOf("?"));
         }
         url = MyStringUtils.replaceKeyFromMap(url, gVars, caseVars);
-        url.replaceAll("/", "\\/");
+//        url.replaceAll("/", "\\/");
         tApiResult.setReqUrl(url);
         try {
             switch (tApi.getMethod().toUpperCase()) {
