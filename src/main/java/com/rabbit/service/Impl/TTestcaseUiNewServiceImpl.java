@@ -7,8 +7,10 @@ import com.rabbit.dao.TSuiteCaseUiMapper;
 import com.rabbit.dao.TTestcaseUiNewDtoMapper;
 import com.rabbit.dto.TestcaseUiNewDto;
 import com.rabbit.model.TStepUiNew;
+import com.rabbit.model.TSuiteCaseUi;
 import com.rabbit.service.TFileInfoService;
 import com.rabbit.service.TStepUiNewService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class TTestcaseUiNewServiceImpl implements TTestcaseUiNewService {
 
@@ -117,12 +120,29 @@ public class TTestcaseUiNewServiceImpl implements TTestcaseUiNewService {
     @Override
     @Transactional
     public TTestcaseUiNew edit(TestcaseUiNewDto testcaseUiNewDto) {
+        TTestcaseUiNew tTestcaseUiNew = tTestcaseUiNewMapper.selectByPrimaryKey(testcaseUiNewDto.getId());
         List<TTestcaseUiNew> byNameAndProjectIdAndIdNot = tTestcaseUiNewMapper.findByNameAndProjectIdAndIdNot(testcaseUiNewDto.getName(), testcaseUiNewDto.getProjectId(), testcaseUiNewDto.getId());
         if (byNameAndProjectIdAndIdNot.size() > 0) {
             throw new IllegalArgumentException("用例【" + testcaseUiNewDto.getName() + "】已存在");
         }
-        tTestcaseUiNewMapper.updateByPrimaryKey(testcaseUiNewDto);
+        if (tTestcaseUiNew == null) {
+            throw new IllegalArgumentException("用例【" + testcaseUiNewDto.getName() + "】已经不存在");
+        } else {
+            if (tTestcaseUiNew.getCaseType() == 1 && testcaseUiNewDto.getCaseType() == 2) {
+                List<TSuiteCaseUi> byCaseId = tSuiteCaseUiMapper.findByCaseId(tTestcaseUiNew.getId());
+                if (byCaseId != null && byCaseId.size() > 0) {
+                    throw new IllegalArgumentException("用例【" + testcaseUiNewDto.getName() + "】已经被用例集引用，不能转业务");
+                }
+            }
+        }
         List<TStepUiNew> testSteps = testcaseUiNewDto.getTestSteps();
+        if (testSteps != null && testcaseUiNewDto.getCaseType() == 2) {
+            TStepUiNew uiAction12 = testSteps.stream().filter(item -> item.getActionType().equals("uiAction12")).findFirst().orElse(null);
+            if (uiAction12 != null) {
+                throw new IllegalArgumentException("业务步骤中不能使用业务关键字，请检查");
+            }
+        }
+        tTestcaseUiNewMapper.updateByPrimaryKey(testcaseUiNewDto);
         stepUiNewService.savaStep(testSteps);
         return testcaseUiNewDto;
     }

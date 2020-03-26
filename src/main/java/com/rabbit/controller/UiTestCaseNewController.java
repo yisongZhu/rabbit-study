@@ -51,7 +51,7 @@ public class UiTestCaseNewController {
             return new ResponseInfo(false, new ErrorInfo(20,"用例步骤不能为空"));
         }
         testcaseUiService.edit(testcaseUi);
-        return new ResponseInfo(true, "修改用例成功");
+        return new ResponseInfo(true, testcaseUi);
     }
 
     @PostMapping("/remove")

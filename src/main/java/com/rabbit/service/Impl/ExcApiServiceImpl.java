@@ -175,7 +175,7 @@ public class ExcApiServiceImpl implements ExcApiService {
             uiTemplateParams.setCreateTime(DateUtil.format(createTime, "yyyy-MM-dd HH:mm:ss"));
             uiTemplateParams.setJobname(planLogName);
 //            uiTemplateParams.setWebip(InetAddress.getLocalHost().getHostAddress());
-            if (reportEmailDoman == null || reportEmailDoman == "") {
+            if (reportEmailDoman == null || reportEmailDoman.trim().equals("")) {
                 uiTemplateParams.setWebip(NetUtil.getLocalIpv4Address());
             } else {
                 uiTemplateParams.setWebip(reportEmailDoman);

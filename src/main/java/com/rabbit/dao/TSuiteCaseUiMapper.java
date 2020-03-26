@@ -1,4 +1,5 @@
 package com.rabbit.dao;
+import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.rabbit.model.TSuiteCaseUi;
@@ -23,5 +24,9 @@ public interface TSuiteCaseUiMapper {
     int deleteBySuiteId(@Param("suiteId")Long suiteId);
 
     Long countBySuiteId(@Param("suiteId")Long suiteId);
+
+    List<TSuiteCaseUi> findByCaseId(@Param("caseId")Long caseId);
+
+
 
 }

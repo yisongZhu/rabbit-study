@@ -5,7 +5,6 @@
     <!--@mbg.generated-->
     <!--@Table device-->
     <id column="id" jdbcType="VARCHAR" property="id" />
-    <id column="status" jdbcType="INTEGER" property="status" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="agent_ip" jdbcType="VARCHAR" property="agentIp" />
     <result column="agent_port" jdbcType="INTEGER" property="agentPort" />
@@ -16,6 +15,7 @@
     <result column="screen_height" jdbcType="INTEGER" property="screenHeight" />
     <result column="img_path" jdbcType="VARCHAR" property="imgPath" />
     <result column="platform" jdbcType="INTEGER" property="platform" />
+    <result column="status" jdbcType="INTEGER" property="status" />
     <result column="last_online_time" jdbcType="TIMESTAMP" property="lastOnlineTime" />
     <result column="last_offline_time" jdbcType="TIMESTAMP" property="lastOfflineTime" />
     <result column="username" jdbcType="VARCHAR" property="username" />
@@ -23,36 +23,34 @@
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    id, `status`, `name`, agent_ip, agent_port, system_version, cpu_info, mem_size, screen_width, 
-    screen_height, img_path, platform, last_online_time, last_offline_time, username, 
-    create_time
+    id, `name`, agent_ip, agent_port, system_version, cpu_info, mem_size, screen_width, 
+    screen_height, img_path, platform, `status`, last_online_time, last_offline_time, 
+    username, create_time
   </sql>
-  <select id="selectByPrimaryKey" parameterType="map" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     <!--@mbg.generated-->
     select 
     <include refid="Base_Column_List" />
     from device
     where id = #{id,jdbcType=VARCHAR}
-      and `status` = #{status,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="map">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     <!--@mbg.generated-->
     delete from device
     where id = #{id,jdbcType=VARCHAR}
-      and `status` = #{status,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.rabbit.model.Device">
     <!--@mbg.generated-->
-    insert into device (id, `status`, `name`, 
-      agent_ip, agent_port, system_version, 
-      cpu_info, mem_size, screen_width, 
-      screen_height, img_path, platform, 
+    insert into device (id, `name`, agent_ip, 
+      agent_port, system_version, cpu_info, 
+      mem_size, screen_width, screen_height, 
+      img_path, platform, `status`, 
       last_online_time, last_offline_time, username, 
       create_time)
-    values (#{id,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
-      #{agentIp,jdbcType=VARCHAR}, #{agentPort,jdbcType=INTEGER}, #{systemVersion,jdbcType=VARCHAR}, 
-      #{cpuInfo,jdbcType=VARCHAR}, #{memSize,jdbcType=VARCHAR}, #{screenWidth,jdbcType=INTEGER}, 
-      #{screenHeight,jdbcType=INTEGER}, #{imgPath,jdbcType=VARCHAR}, #{platform,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{agentIp,jdbcType=VARCHAR}, 
+      #{agentPort,jdbcType=INTEGER}, #{systemVersion,jdbcType=VARCHAR}, #{cpuInfo,jdbcType=VARCHAR}, 
+      #{memSize,jdbcType=VARCHAR}, #{screenWidth,jdbcType=INTEGER}, #{screenHeight,jdbcType=INTEGER}, 
+      #{imgPath,jdbcType=VARCHAR}, #{platform,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
       #{lastOnlineTime,jdbcType=TIMESTAMP}, #{lastOfflineTime,jdbcType=TIMESTAMP}, #{username,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
@@ -62,9 +60,6 @@
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null and id != ''">
         id,
-      </if>
-      <if test="status != null">
-        `status`,
       </if>
       <if test="name != null and name != ''">
         `name`,
@@ -96,6 +91,9 @@
       <if test="platform != null">
         platform,
       </if>
+      <if test="status != null">
+        `status`,
+      </if>
       <if test="lastOnlineTime != null">
         last_online_time,
       </if>
@@ -112,9 +110,6 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null and id != ''">
         #{id,jdbcType=VARCHAR},
-      </if>
-      <if test="status != null">
-        #{status,jdbcType=INTEGER},
       </if>
       <if test="name != null and name != ''">
         #{name,jdbcType=VARCHAR},
@@ -145,6 +140,9 @@
       </if>
       <if test="platform != null">
         #{platform,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
       </if>
       <if test="lastOnlineTime != null">
         #{lastOnlineTime,jdbcType=TIMESTAMP},
@@ -194,6 +192,9 @@
       <if test="platform != null">
         platform = #{platform,jdbcType=INTEGER},
       </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
       <if test="lastOnlineTime != null">
         last_online_time = #{lastOnlineTime,jdbcType=TIMESTAMP},
       </if>
@@ -208,7 +209,6 @@
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
-      and `status` = #{status,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.rabbit.model.Device">
     <!--@mbg.generated-->
@@ -223,18 +223,18 @@
       screen_height = #{screenHeight,jdbcType=INTEGER},
       img_path = #{imgPath,jdbcType=VARCHAR},
       platform = #{platform,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=INTEGER},
       last_online_time = #{lastOnlineTime,jdbcType=TIMESTAMP},
       last_offline_time = #{lastOfflineTime,jdbcType=TIMESTAMP},
       username = #{username,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=VARCHAR}
-      and `status` = #{status,jdbcType=INTEGER}
   </update>
 
 <!--auto generated by MybatisCodeHelper on 2020-03-07-->
   <select id="findByAll" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List"/>
+    <include refid="Base_Column_List" />
     from device
     <where>
       <if test="id != null and id != ''">
@@ -291,7 +291,7 @@
 <!--auto generated by MybatisCodeHelper on 2020-03-07-->
   <select id="findByPlatformAndStatusNot" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List"/>
+    <include refid="Base_Column_List" />
     from device
     where platform=#{platform,jdbcType=INTEGER} and `status` <![CDATA[<>]]> #{notStatus,jdbcType=INTEGER}
   </select>

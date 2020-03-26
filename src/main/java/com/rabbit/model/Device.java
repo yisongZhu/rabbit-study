@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
 
+/**
+ * 设备表
+ */
 @Data
 public class Device implements Serializable {
     public static final Integer OFFLINE_STATUS = 0;
@@ -13,11 +16,6 @@ public class Device implements Serializable {
      * 设备id
      */
     private String id;
-
-    /**
-     * 设备状态：0.离线 1.使用中 2.空闲
-     */
-    private Integer status;
 
     /**
      * 设备名
@@ -68,6 +66,11 @@ public class Device implements Serializable {
      * 平台：1.android  2.ios
      */
     private Integer platform;
+
+    /**
+     * 设备状态：0.离线 1.使用中 2.空闲
+     */
+    private Integer status;
 
     /**
      * 最近一次在线时间

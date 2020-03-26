@@ -2,7 +2,9 @@ package com.rabbit.service;
 
 import com.github.pagehelper.PageInfo;
 import com.rabbit.model.Device;
+import com.rabbit.model.UploadFile;
 
+import java.io.InputStream;
 import java.util.List;
 
 public interface DeviceService {
@@ -26,10 +28,9 @@ public interface DeviceService {
 
     List<Device> findByAll(Device device);
 
-    int deleteByPrimaryKey(String id, Integer status);
-
-    Device selectByPrimaryKey(String id, Integer status);
+    UploadFile upload(String originalFilename, Integer fileType , InputStream data);
 }
+
 
 
 

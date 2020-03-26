@@ -57,7 +57,7 @@ public class TJmeterScriptServiceImpl implements TJmeterScriptService {
         String newScriptPathInZip = uuid + "/script/" + record.getName() + ".jmx";
         String zipPathName = RabbitConfig.jmeterfile + record.getProjectId() + File.separator + uuid + ".zip";
         try {
-            ZipUtils.addStingToZip(zipPathName,"",newScriptPathInZip);
+            ZipUtils.addStingToZip(zipPathName, "", newScriptPathInZip);
         } catch (Exception e) {
             throw new IllegalArgumentException(e.getMessage());
         }
@@ -150,18 +150,22 @@ public class TJmeterScriptServiceImpl implements TJmeterScriptService {
         }
 
         for (FileHeader scriptsFileHeader : scripts) {
+            //遍历文件中的jmx脚本文件
             String jmxName = scriptsFileHeader.getFileName().replace(oldRootDir + "script/", "").replace(".jmx", "");
             List<TJmeterScript> byName = tJmeterScriptMapper.findByName(jmxName);
             if (byName.size() > 0) {
+                //修改
                 TJmeterScript jmeterScript = byName.get(0);
                 String zipPathName = RabbitConfig.jmeterfile + projectId + File.separator + jmeterScript.getScriptPath();
                 ZipFile scripZip = new ZipFile(zipPathName);
-                ZipInputStream inputStream = zipFile.getInputStream(scriptsFileHeader);
 
+                ZipInputStream inputStream = zipFile.getInputStream(scriptsFileHeader);
                 String newRootDir = jmeterScript.getScriptPath().replace(".zip", "") + "/";
                 String inZipJmxName = newRootDir + "script/" + jmxName + ".jmx";
-
                 ZipUtils.addInputStreamToZip(scripZip, inputStream, inZipJmxName);
+                //解压文件
+//                scripZip.extractAll(RabbitConfig.jmeterfile + projectId);
+                //获取zip文件中的文本
                 String scriptText = FileUtils.getText(zipFile.getInputStream(scriptsFileHeader));
                 String jmeterDataPath = ZipUtils.getJmeterDataPath(zipFile, scripZip, datas, oldRootDir, newRootDir);
                 jmeterScript.setDataPath(jmeterDataPath);
@@ -171,12 +175,14 @@ public class TJmeterScriptServiceImpl implements TJmeterScriptService {
                 tJmeterScriptMapper.updateByPrimaryKeySelective(jmeterScript);
                 inputStream.close();
             } else {
+                //新增
                 String uuid = UUID.randomUUID().toString().replace("-", "");
                 String jmxPathName = RabbitConfig.jmeterfile + projectId + File.separator + uuid;
                 String newRootDir = uuid + "/";
                 String inZipJmxName = scriptsFileHeader.getFileName().replace(oldRootDir, newRootDir);
                 ZipFile scripZip = new ZipFile(jmxPathName + ".zip");
                 ZipInputStream inputStream = zipFile.getInputStream(scriptsFileHeader);
+
                 ZipUtils.addInputStreamToZip(scripZip, inputStream, inZipJmxName);
                 TJmeterScript jmeterScript = new TJmeterScript();
                 String scriptText = FileUtils.getText(zipFile.getInputStream(scriptsFileHeader));

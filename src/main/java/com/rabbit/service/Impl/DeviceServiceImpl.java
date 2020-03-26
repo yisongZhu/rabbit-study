@@ -2,6 +2,12 @@ package com.rabbit.service.Impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.rabbit.common.constant.FileType;
+import com.rabbit.config.RabbitConfig;
+import com.rabbit.model.UploadFile;
+import com.rabbit.utils.HttpServletUtil;
+import com.rabbit.utils.UUIDUtil;
+import com.rabbit.utils.file.FileUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -11,6 +17,7 @@ import com.rabbit.dao.DeviceMapper;
 import com.rabbit.service.DeviceService;
 import org.springframework.util.StringUtils;
 
+import java.io.InputStream;
 import java.util.List;
 
 @Service
@@ -66,15 +73,38 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public int deleteByPrimaryKey(String id, Integer status) {
-        return deviceMapper.deleteByPrimaryKey(id, status);
-    }
-
-    @Override
-    public Device selectByPrimaryKey(String id, Integer status) {
-        return deviceMapper.selectByPrimaryKey(id, status);
+    public UploadFile upload(String originalFilename, Integer fileType, InputStream data) {
+        UploadFile uploadFile = new UploadFile();
+        String uploadFilePath;
+        switch (fileType) {
+            case FileType.IMG:
+                uploadFilePath = UploadFile.IMG_PATH;
+                break;
+            case FileType.VIDEO:
+                uploadFilePath = UploadFile.VIDEO_PATH;
+                break;
+            case FileType.APP:
+                uploadFilePath = UploadFile.APP_PATH;
+                break;
+            case FileType.DRIVER:
+                uploadFilePath = UploadFile.DRIVER_PATH;
+                break;
+            default:
+                uploadFilePath = UploadFile.OTHER_FILE_PATH;
+        }
+        String destFileName = UUIDUtil.getUUID();
+        if (originalFilename.contains(".")) {
+            destFileName = destFileName + "." + StringUtils.unqualify(originalFilename);
+        }
+        String destFilePath = uploadFilePath + "/" + destFileName;
+        String fullPath = RabbitConfig.profile + destFilePath;
+        FileUtils.writeInputStream(fullPath, data);
+        uploadFile.setFilePath(destFilePath);
+        uploadFile.setDownloadUrl(HttpServletUtil.getStaticResourceUrl(destFilePath));
+        return uploadFile;
     }
 }
+
 
 
 

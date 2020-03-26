@@ -76,7 +76,6 @@ public class RequestExecutorImpl implements RequestExecutorServer {
             url = url.substring(0, url.indexOf("?"));
         }
         url = MyStringUtils.replaceKeyFromMap(url, gVars, caseVars);
-//        url.replaceAll("/", "\\/");
         tApiResult.setReqUrl(url);
         try {
             switch (tApi.getMethod().toUpperCase()) {
@@ -112,6 +111,7 @@ public class RequestExecutorImpl implements RequestExecutorServer {
                 tApiResult.setException("请求异常,URL[" + tApi.getDomain() + "]无法连接");
             } else {
                 tApiResult.setException("请求异常：" + e.getMessage());
+                e.printStackTrace();
             }
             log.info("请求异常:{}", e.getMessage());
             long time = new Date().getTime() - tApiResult.getCreateTime().getTime();
@@ -162,7 +162,8 @@ public class RequestExecutorImpl implements RequestExecutorServer {
         httpClientParams.put("http.socket.timeout", 60000);
         httpClientParams.put("http.connection.manager.timeout", 60000);
         RestAssured.config = RestAssured.config().httpClient(HttpClientConfig.httpClientConfig().addParams(httpClientParams));
-        RestAssured.config = RestAssured.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8"));
+//      RestAssured.config = RestAssured.config().encoderConfig(EncoderConfig.encoderConfig().defaultContentCharset("UTF-8"));
+        RestAssured.config = RestAssured.config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false));
         requestSpecification.config(RestAssured.config);
     }
 
@@ -188,6 +189,9 @@ public class RequestExecutorImpl implements RequestExecutorServer {
                         requestSpecification.cookie(c[0], c[1]);
                     }
                 }
+            } else if (header.getKey().equalsIgnoreCase("Content-Type")) {
+                log.info("我进来了：{}",header.getValue());
+                requestSpecification.contentType(header.getValue());
             } else {
                 requestSpecification.header(new Header(header.getKey(), header.getValue()));
             }
