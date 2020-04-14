@@ -138,6 +138,7 @@ public class JmeterController {
                         jmeterScriptService.uploadJmeterScript(zipFile);
                     } catch (Exception e) {
                         e.printStackTrace();
+                        file.delete();
                         throw new IllegalArgumentException(e.getMessage());
                     }
                     file.delete();
@@ -158,7 +159,7 @@ public class JmeterController {
                          HttpServletRequest request, HttpServletResponse resp) throws IOException {
         InputStream fis = null;
         try {
-            String zipPathName = RabbitConfig.jmeterfile + projectId + File.separator + scriptName;
+            String zipPathName = RabbitConfig.jmeterfile + projectId + "/script/" + scriptName;
             String zipName = scriptName.replace(".zip", "") + "/data/" + fileName;
             fis = ZipUtils.getInputStream(zipPathName, zipName);
             resp.setContentType("application/vnd.ms-excel;charset=UTF-8");

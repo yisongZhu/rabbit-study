@@ -1,7 +1,9 @@
 package com.rabbit.utils.apitest;
 
 import com.rabbit.model.po.Assert;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class ApiUtil {
     public static String getObjRealType(Object object) {
         if (object == null) {

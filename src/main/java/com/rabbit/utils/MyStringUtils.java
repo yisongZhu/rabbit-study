@@ -53,9 +53,19 @@ public class MyStringUtils {
             }
             for (ApiParam apiParam : bParams) {
                 if (apiParam.getKey().equals("$")) {
-                    json = ApiUtil.getRealObj(json, apiParam.getType()).toString();
+                    Object realObj = ApiUtil.getRealObj(json, apiParam.getType());
+                    if (realObj == null) {
+                        return "";
+                    } else {
+                        return realObj.toString();
+                    }
                 } else if (apiParam.getKey().startsWith("$")) {
-                    JsonPath p = JsonPath.compile(apiParam.getKey());
+                    JsonPath p = null;
+                    try {
+                        p = JsonPath.compile(apiParam.getKey());
+                    } catch (Exception e) {
+                        continue;
+                    }
                     ext.set(p, ApiUtil.getRealObj(apiParam.getValue(), apiParam.getType()));
                 }
             }

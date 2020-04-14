@@ -61,7 +61,8 @@ public class RequestExecutorImpl implements RequestExecutorServer {
         tApiResult.setReqMethod(tApi.getMethod());
         if (!tApi.getMethod().equalsIgnoreCase("get")) {
             tApiResult.setReqBodyType(tApi.getReqBodyType());
-            if (tApi.getReqBodyType().equals("form")) {
+            if (tApi.getReqBodyType() == null) {
+            } else if (tApi.getReqBodyType().equals("form")) {
                 applyFormParam(requestSpecification, tApi, gVars, caseVars, tApiResult, params);
             } else if (tApi.getReqBodyType().equals("raw")) {
                 applyRawParam(requestSpecification, tApi, gVars, caseVars, tApiResult, params);
@@ -190,7 +191,7 @@ public class RequestExecutorImpl implements RequestExecutorServer {
                     }
                 }
             } else if (header.getKey().equalsIgnoreCase("Content-Type")) {
-                log.info("我进来了：{}",header.getValue());
+                log.info("我进来了：{}", header.getValue());
                 requestSpecification.contentType(header.getValue());
             } else {
                 requestSpecification.header(new Header(header.getKey(), header.getValue()));
@@ -290,7 +291,14 @@ public class RequestExecutorImpl implements RequestExecutorServer {
                 case "bodyJson":
                     if (tApiResult.getRspBodyType().equals("json")) {
                         JsonPath json = new JsonPath(tApiResult.getRspBody());
-                        Object value = json.get(extractExpress);
+                        Object value = null;
+                        try {
+                            value = json.get(extractExpress);
+                        } catch (Exception e) {
+                            extractResult.setRealType("null");
+                            extractResult.setRealValue("");
+                            break;
+                        }
                         String realType = ApiUtil.getObjRealType(value);
                         if (realType.equals("null")) {
                             extractResult.setRealType(realType);
@@ -307,7 +315,14 @@ public class RequestExecutorImpl implements RequestExecutorServer {
                 case "bodyXml":
                     if (tApiResult.getRspBodyType().equals("bodyXml")) {
                         XmlPath xmlPath = new XmlPath(tApiResult.getRspBody());
-                        Object value = xmlPath.get(extractExpress);
+                        Object value = null;
+                        try {
+                            value = xmlPath.get(extractExpress);
+                        } catch (Exception e) {
+                            extractResult.setRealType("null");
+                            extractResult.setRealValue("");
+                            break;
+                        }
                         String realType = ApiUtil.getObjRealType(value);
                         if (realType.equals("null")) {
                             extractResult.setRealType("null");
@@ -349,22 +364,23 @@ public class RequestExecutorImpl implements RequestExecutorServer {
                     }
                     if (header == null) {
                         extractResult.setRealType("null");
+                        extractResult.setRealValue("");
                     } else {
                         extractResult.setRealType("string");
-                    }
-                    if (extractExpress.split("\\.").length > 1) {
-                        String[] split = header.getValue().split(";");
-                        for (String s : split) {
-                            String[] split1 = s.split("=");
-                            if (split1.length > 1 && split1[0].trim().equals(extractExpress.split("\\.")[1].trim())) {
-                                extractResult.setRealValue(split1[1].trim());
-                                break;
+                        if (extractExpress.split("\\.").length > 1) {
+                            String[] split = header.getValue().split(";");
+                            for (String s : split) {
+                                String[] split1 = s.split("=");
+                                if (split1.length > 1 && split1[0].trim().equals(extractExpress.split("\\.")[1].trim())) {
+                                    extractResult.setRealValue(split1[1].trim());
+                                    break;
+                                }
+                                extractResult.setRealType("null");
+                                extractResult.setRealValue("");
                             }
-                            extractResult.setRealType("null");
-                            extractResult.setRealValue("");
+                        } else {
+                            extractResult.setRealValue(header.getValue());
                         }
-                    } else {
-                        extractResult.setRealValue(header.getValue());
                     }
                     break;
                 default:
@@ -414,7 +430,14 @@ public class RequestExecutorImpl implements RequestExecutorServer {
             case "bodyJson":
                 if (tApiResult.getRspBodyType().equals("json")) {
                     JsonPath json = new JsonPath(tApiResult.getRspBody());
-                    Object value = json.get(extractExpress);
+                    Object value = null;
+                    try {
+                        value = json.get(extractExpress);
+                    } catch (Exception e) {
+                        assertResult.setRealType("null");
+                        assertResult.setRealValue("");
+                        break;
+                    }
                     String realType = ApiUtil.getObjRealType(value);
                     if (realType.equals("null")) {
                         assertResult.setRealType(realType);
@@ -431,7 +454,14 @@ public class RequestExecutorImpl implements RequestExecutorServer {
             case "bodyXml":
                 if (tApiResult.getRspBodyType().equals("bodyXml")) {
                     XmlPath xmlPath = new XmlPath(tApiResult.getRspBody());
-                    Object value = xmlPath.get(extractExpress);
+                    Object value = null;
+                    try {
+                        value = xmlPath.get(extractExpress);
+                    } catch (Exception e) {
+                        assertResult.setRealType("null");
+                        assertResult.setRealValue("");
+                        break;
+                    }
                     String realType = ApiUtil.getObjRealType(value);
                     if (realType.equals("null")) {
                         assertResult.setRealType(realType);

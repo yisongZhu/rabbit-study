@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.rabbit.config.RabbitConfig;
 import com.rabbit.model.Result;
+import com.rabbit.utils.UUIDUtil;
 import com.rabbit.utils.UserUtil;
 import com.rabbit.utils.ZipUtils;
 import com.rabbit.utils.file.FileUtils;
@@ -38,7 +39,7 @@ public class TJmeterScriptServiceImpl implements TJmeterScriptService {
     @Override
     public int deleteByPrimaryKey(Long id) {
         TJmeterScript jmeterScript = tJmeterScriptMapper.selectByPrimaryKey(id);
-        String pathName = RabbitConfig.jmeterfile + jmeterScript.getProjectId() + File.separator + jmeterScript.getScriptPath();
+        String pathName = RabbitConfig.jmeterfile + jmeterScript.getProjectId() + "/script/" + jmeterScript.getScriptPath();
         File file = new File(pathName);
         if (file.exists() & file.isFile()) {
             file.delete();
@@ -55,7 +56,7 @@ public class TJmeterScriptServiceImpl implements TJmeterScriptService {
     public int insertSelective(TJmeterScript record) {
         String uuid = UUID.randomUUID().toString().replace("-", "");
         String newScriptPathInZip = uuid + "/script/" + record.getName() + ".jmx";
-        String zipPathName = RabbitConfig.jmeterfile + record.getProjectId() + File.separator + uuid + ".zip";
+        String zipPathName = RabbitConfig.jmeterfile + record.getProjectId() + "/script/" + uuid + ".zip";
         try {
             ZipUtils.addStingToZip(zipPathName, "", newScriptPathInZip);
         } catch (Exception e) {
@@ -107,10 +108,9 @@ public class TJmeterScriptServiceImpl implements TJmeterScriptService {
         String name = jmeterScript.getName();
         String scriptPath = jmeterScript.getScriptPath();
         String newScriptPathInZip = scriptPath.replace(".zip", "") + "/script/" + record.getName() + ".jmx";
-        String zipPathName = RabbitConfig.jmeterfile + jmeterScript.getProjectId() + File.separator + scriptPath;
+        String zipPathName = RabbitConfig.jmeterfile + jmeterScript.getProjectId() + "/script/" + scriptPath;
         String oldScriptPathInZip = scriptPath.replace(".zip", "") + "/script/" + name + ".jmx";
         if (!name.equals(record.getName())) {
-            log.info(name + "=========" + record.getName());
             //修改文件的jmx名
             try {
                 ZipUtils.renameFile(zipPathName, oldScriptPathInZip, newScriptPathInZip);
@@ -156,7 +156,12 @@ public class TJmeterScriptServiceImpl implements TJmeterScriptService {
             if (byName.size() > 0) {
                 //修改
                 TJmeterScript jmeterScript = byName.get(0);
-                String zipPathName = RabbitConfig.jmeterfile + projectId + File.separator + jmeterScript.getScriptPath();
+                String zipPathName = RabbitConfig.jmeterfile + projectId + "/script/" + jmeterScript.getScriptPath();
+
+                File targetFile = new File(zipPathName);
+                if (!targetFile.getParentFile().exists()) {
+                    targetFile.getParentFile().mkdirs();
+                }
                 ZipFile scripZip = new ZipFile(zipPathName);
 
                 ZipInputStream inputStream = zipFile.getInputStream(scriptsFileHeader);
@@ -176,11 +181,16 @@ public class TJmeterScriptServiceImpl implements TJmeterScriptService {
                 inputStream.close();
             } else {
                 //新增
-                String uuid = UUID.randomUUID().toString().replace("-", "");
-                String jmxPathName = RabbitConfig.jmeterfile + projectId + File.separator + uuid;
+                String uuid = UUIDUtil.getUUID();
+                String jmxPathName = RabbitConfig.jmeterfile + projectId + "/script/" + uuid + ".zip";
                 String newRootDir = uuid + "/";
                 String inZipJmxName = scriptsFileHeader.getFileName().replace(oldRootDir, newRootDir);
-                ZipFile scripZip = new ZipFile(jmxPathName + ".zip");
+
+                File targetFile = new File(jmxPathName);
+                if (!targetFile.getParentFile().exists()) {
+                    targetFile.getParentFile().mkdirs();
+                }
+                ZipFile scripZip = new ZipFile(jmxPathName);
                 ZipInputStream inputStream = zipFile.getInputStream(scriptsFileHeader);
 
                 ZipUtils.addInputStreamToZip(scripZip, inputStream, inZipJmxName);
@@ -202,7 +212,7 @@ public class TJmeterScriptServiceImpl implements TJmeterScriptService {
 
     @Override
     public Result isJmeterZip(ZipFile zipFile) {
-
+        //校验是否jmeter脚本格式zip
         List<FileHeader> fileHeaders;
         try {
             zipFile.setFileNameCharset("GBK");
@@ -256,7 +266,7 @@ public class TJmeterScriptServiceImpl implements TJmeterScriptService {
         TJmeterScript jmeterScript = tJmeterScriptMapper.selectByPrimaryKey(id);
         String scriptPath = jmeterScript.getScriptPath();
         String dataPath = jmeterScript.getDataPath();
-        String zipPathName = RabbitConfig.jmeterfile + jmeterScript.getProjectId() + File.separator + jmeterScript.getScriptPath();
+        String zipPathName = RabbitConfig.jmeterfile + jmeterScript.getProjectId() + "/script/" + jmeterScript.getScriptPath();
         String csvPathInZip = scriptPath.replace(".zip", "") + "/data/" + csvName;
 
         FileInputStream fileInputStream = null;
@@ -279,7 +289,7 @@ public class TJmeterScriptServiceImpl implements TJmeterScriptService {
         String scriptPath = jmeterScript.getScriptPath();
         String dataPath = jmeterScript.getDataPath();
         String newCsvPathInZip = scriptPath.replace(".zip", "") + "/data/" + newCsvName;
-        String zipPathName = RabbitConfig.jmeterfile + jmeterScript.getProjectId() + File.separator + jmeterScript.getScriptPath();
+        String zipPathName = RabbitConfig.jmeterfile + jmeterScript.getProjectId() + "/script/" + jmeterScript.getScriptPath();
         String oldCsvPathInZip = scriptPath.replace(".zip", "") + "/data/" + orgCsvName;
 
         FileInputStream fileInputStream = null;
@@ -301,7 +311,7 @@ public class TJmeterScriptServiceImpl implements TJmeterScriptService {
     public int delJmeterCsv(Long id, String csvName) {
         TJmeterScript jmeterScript = tJmeterScriptMapper.selectByPrimaryKey(id);
         String scriptPath = jmeterScript.getScriptPath();
-        String zipPathName = RabbitConfig.jmeterfile + jmeterScript.getProjectId() + File.separator + jmeterScript.getScriptPath();
+        String zipPathName = RabbitConfig.jmeterfile + jmeterScript.getProjectId() + "/script/" + jmeterScript.getScriptPath();
         String dataPath = jmeterScript.getDataPath();
         String csvPathInZip = scriptPath.replace(".zip", "") + "/data/" + csvName;
         try {

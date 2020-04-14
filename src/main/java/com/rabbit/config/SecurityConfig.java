@@ -54,7 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //					"/statics/**", "/static/**/*","/userTest/**","/hessian/**")
                 .antMatchers("/", "/v2/api-docs/**", "/swagger-resources/**",
                         "/webjars/**", "/swagger-ui.html", "/v2/api-docs/**", "/monitor/druid/**",
-                        "/static/**/*", "/userTest/**", "/hessian/**", "/profile/**",
+                        "/static/**/*", "/js/**/*", "/userTest/**", "/hessian/**", "/profile/**",
                         "/springboot-admin/**", "/device/**", "/job/run/**")
                 .permitAll().anyRequest().authenticated();
         http.formLogin().loginProcessingUrl("/login")
