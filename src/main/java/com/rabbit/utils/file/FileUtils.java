@@ -1,11 +1,14 @@
 package com.rabbit.utils.file;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
+import sun.misc.BASE64Encoder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.URLEncoder;
 import java.time.LocalDate;
+import java.util.Objects;
 
 /**
  * 文件处理工具类
@@ -101,6 +104,7 @@ public class FileUtils {
     public static String getPath() {
         return LocalDate.now().toString().replace("-", File.separator) + File.separator;
     }
+
     /**
      * 删除文件
      *
@@ -157,6 +161,7 @@ public class FileUtils {
 
     /**
      * 通过文件路径获取文件中的文本
+     *
      * @param path
      * @return
      */
@@ -177,6 +182,7 @@ public class FileUtils {
 
     /**
      * 获取InputStream 中的字符
+     *
      * @param inputStream
      * @return
      */
@@ -248,6 +254,7 @@ public class FileUtils {
 
     /**
      * 文件编码
+     *
      * @param inputStream
      * @return
      */
@@ -262,6 +269,7 @@ public class FileUtils {
 
     /**
      * 删除文件或者文件夹
+     *
      * @param file
      * @return
      */
@@ -276,6 +284,32 @@ public class FileUtils {
             }
         }
         return file.delete();
+    }
+
+    /**
+     * 本地图片转换Base64的方法
+     *
+     * @param imgPath     
+     */
+
+    public static String ImageToBase64(String imgPath) {
+        if (StringUtils.isEmpty(imgPath)) {
+            return "";
+        }
+        byte[] data = null;
+        // 读取图片字节数组
+        try {
+            InputStream in = new FileInputStream(imgPath);
+            data = new byte[in.available()];
+            in.read(data);
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // 对字节数组Base64编码
+        BASE64Encoder encoder = new BASE64Encoder();
+        // 返回Base64编码过的字节数组字符串
+        return encoder.encode(data);
     }
 
 }

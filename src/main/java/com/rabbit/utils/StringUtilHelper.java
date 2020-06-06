@@ -1,5 +1,7 @@
 package com.rabbit.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.dom4j.DocumentHelper;
 import org.jsoup.Jsoup;
@@ -11,14 +13,18 @@ public class StringUtilHelper {
             return "json";
         } catch (Exception e) {
             try {
-                Jsoup.parse(str);
-                return "html";
-            } catch (Exception ee) {
+                JSONObject.parseArray(str);
+                return "json";
+            } catch (Exception e1) {
                 try {
-                    DocumentHelper.parseText(str);
-                    return "xml";
-                } catch (Exception eee) {
-
+                    Jsoup.parse(str);
+                    return "html";
+                } catch (Exception ee) {
+                    try {
+                        DocumentHelper.parseText(str);
+                        return "xml";
+                    } catch (Exception eee) {
+                    }
                 }
             }
         }

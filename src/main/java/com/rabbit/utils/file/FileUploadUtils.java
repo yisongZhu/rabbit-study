@@ -63,7 +63,7 @@ public class FileUploadUtils {
 
 
     /**
-     * 通过文件名获取文件对面
+     * 通过文件名获取文件对象
      *
      * @return
      * @throws IOException

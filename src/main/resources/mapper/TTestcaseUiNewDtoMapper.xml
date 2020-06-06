@@ -7,6 +7,7 @@
         <result column="project_id" jdbcType="BIGINT" property="projectId"/>
         <result column="timout_time" jdbcType="BIGINT" property="timoutTime"/>
         <result column="fail_continue" jdbcType="INTEGER" property="failContinue"/>
+        <result column="flags" jdbcType="VARCHAR" property="flags"/>
         <result column="params" jdbcType="LONGVARCHAR" property="params"/>
         <result column="case_type" jdbcType="BIGINT" property="caseType"/>
         <result column="remark" jdbcType="LONGVARCHAR" property="remark"/>

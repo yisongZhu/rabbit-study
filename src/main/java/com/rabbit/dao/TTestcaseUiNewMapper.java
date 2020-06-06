@@ -17,7 +17,7 @@ public interface TTestcaseUiNewMapper {
 
     List<TTestcaseUiNew> findByAll(TTestcaseUiNew tTestcaseUiNew);
 
-    List<TTestcaseUiNew> findByCaseTypeAndProjectId(@Param("caseType")Long caseType,@Param("projectId")Long projectId);
+    List<TTestcaseUiNew> findByCaseTypeAndProjectId(@Param("caseType") Long caseType, @Param("projectId") Long projectId);
 
     List<TTestcaseUiNew> findByNameAndProjectId(@Param("name") String name, @Param("projectId") Long projectId);
 

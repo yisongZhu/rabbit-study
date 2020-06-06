@@ -2,7 +2,8 @@ package com.rabbit.service;
 
 import com.github.pagehelper.PageInfo;
 import com.rabbit.model.TTestStepUiNewLog;
-public interface TTestStepUiNewLogService{
+
+public interface TTestStepUiNewLogService {
 
 
     int deleteByPrimaryKey(Long id);
@@ -16,5 +17,8 @@ public interface TTestStepUiNewLogService{
     int updateByPrimaryKeySelective(TTestStepUiNewLog record);
 
     int updateByPrimaryKey(TTestStepUiNewLog record);
+
     PageInfo<TTestStepUiNewLog> findByAllwithPage(int page, int pageSize, TTestStepUiNewLog tTestStepUiNewLog);
+
+    String getReportHtml(Long logId);
 }

@@ -3,6 +3,7 @@ package com.rabbit.service.Impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.rabbit.model.po.GlobalVar;
+import com.rabbit.utils.Convert;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -81,13 +82,12 @@ public class GlobalParamServiceImpl implements GlobalParamService {
             }
             if (globalParam.getParamType().equals(2)) {
                 try {
-                    vars.put(globalParam.getParamName(), Double.valueOf(globalParam.getParamValue()));
+                    vars.put(globalParam.getParamName(), Convert.toDouble(globalParam.getParamValue(), 0D));
                 } catch (Exception e) {
                     vars.put(globalParam.getParamName(), null);
                 }
             } else if (globalParam.getParamType().equals(3)) {
                 try {
-                    vars.put(globalParam.getParamName(), Double.valueOf(globalParam.getParamValue()));
                     if (globalParam.getParamValue().toLowerCase().equals("true")) {
                         vars.put(globalParam.getParamName(), true);
                     } else {

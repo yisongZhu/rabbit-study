@@ -1,5 +1,6 @@
 package com.rabbit.service.Impl;
 
+import com.jayway.jsonpath.JsonPath;
 import com.rabbit.model.TApiResult;
 import com.rabbit.model.TApi;
 import com.rabbit.model.po.*;
@@ -14,7 +15,6 @@ import io.restassured.RestAssured;
 import io.restassured.config.EncoderConfig;
 import io.restassured.config.HttpClientConfig;
 import io.restassured.http.Header;
-import io.restassured.path.json.JsonPath;
 import io.restassured.path.xml.XmlPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -290,10 +290,11 @@ public class RequestExecutorImpl implements RequestExecutorServer {
             switch (extract.getDataSource()) {
                 case "bodyJson":
                     if (tApiResult.getRspBodyType().equals("json")) {
-                        JsonPath json = new JsonPath(tApiResult.getRspBody());
+//                        JsonPath json = new JsonPath(tApiResult.getRspBody());
                         Object value = null;
                         try {
-                            value = json.get(extractExpress);
+                            value = JsonPath.read(tApiResult.getRspBody(), extractExpress);
+//                            value = json.get(extractExpress);
                         } catch (Exception e) {
                             extractResult.setRealType("null");
                             extractResult.setRealValue("");
@@ -429,10 +430,11 @@ public class RequestExecutorImpl implements RequestExecutorServer {
         switch (assertion.getDataSource()) {
             case "bodyJson":
                 if (tApiResult.getRspBodyType().equals("json")) {
-                    JsonPath json = new JsonPath(tApiResult.getRspBody());
+//                    JsonPath json = new JsonPath(tApiResult.getRspBody());
                     Object value = null;
                     try {
-                        value = json.get(extractExpress);
+                        value = JsonPath.read(tApiResult.getRspBody(), extractExpress);
+//                        value = json.get(extractExpress);
                     } catch (Exception e) {
                         assertResult.setRealType("null");
                         assertResult.setRealValue("");

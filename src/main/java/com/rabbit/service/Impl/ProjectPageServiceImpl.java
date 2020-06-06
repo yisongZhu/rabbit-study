@@ -1,10 +1,13 @@
 package com.rabbit.service.Impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.rabbit.dao.PageElementMapper;
 import com.rabbit.dao.ProjectPageDtoMapper;
 import com.rabbit.dto.ProjectPageDto;
+import com.rabbit.model.PageElement;
+import com.rabbit.utils.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -49,26 +52,65 @@ public class ProjectPageServiceImpl implements ProjectPageService {
     public int updateByPrimaryKey(ProjectPage record) {
         return projectPageMapper.updateByPrimaryKey(record);
     }
+
     @Override
     public ProjectPageDto selectDtoByPrimaryKey(Long id) {
         return projectPageDtoMapper.selectDtoByPrimaryKey(id);
     }
+
     @Override
     public List<ProjectPageDto> findDtoByProjectId(Long projectId) {
         return projectPageDtoMapper.findDtoByProjectId(projectId);
     }
+
     @Override
     public List<ProjectPageDto> findDtoByProjectIdAndPageName(Long projectId, String pageName) {
         return projectPageDtoMapper.findDtoByProjectIdAndPageName(projectId, pageName);
     }
+
     @Override
     public List<ProjectPageDto> findDtoByProjectIdAndPageNameAndIdNot(Long projectId, String pageName, Long notId) {
         return projectPageDtoMapper.findDtoByProjectIdAndPageNameAndIdNot(projectId, pageName, notId);
     }
+
     @Override
     public PageInfo<ProjectPageDto> findDtoByAllwithPage(int page, int pageSize, ProjectPage projectPage) {
         PageHelper.startPage(page, pageSize);
         return new PageInfo<>(projectPageDtoMapper.findDtoByAll(projectPage));
+    }
+
+    @Transactional
+    @Override
+    public Boolean copyPageById(Long id) {
+        ProjectPage projectPage = projectPageMapper.findById(id);
+        if (projectPage == null) {
+            throw new IllegalArgumentException("该页面元素已删除");
+        }
+        String newPageName = generateNewPageName(projectPage.getProjectId(), projectPage.getPageName());
+        projectPage.setPageName(newPageName);
+        projectPageMapper.insertSelective(projectPage);
+        List<PageElement> pageElements = pageElementMapper.findByPageId(id);
+        for (PageElement pageElement : pageElements) {
+            pageElement.setId(null);
+            pageElement.setPageId(projectPage.getId());
+        }
+        pageElementMapper.insertList(pageElements);
+        return true;
+    }
+
+    private String generateNewPageName(Long projectId, String pageName) {
+        int i = 1;
+        while (true) {
+            pageName = pageName + "_temp";
+            List<ProjectPage> byProjectIdAndPageName = projectPageMapper.findByProjectIdAndPageName(projectId, pageName);
+            if (CollectionUtil.isEmpty(byProjectIdAndPageName)) {
+                return pageName;
+            }
+            i++;
+            if (i >= 10) {
+                return pageName + UUIDUtil.getUUID();
+            }
+        }
     }
 }
 

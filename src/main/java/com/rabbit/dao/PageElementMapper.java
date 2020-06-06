@@ -29,4 +29,6 @@ public interface PageElementMapper {
     @Select("SELECT pe.* FROM t_project_page tp , t_page_element pe WHERE  tp.id = pe.page_id AND tp.project_id = #{projectId}")
     List<PageElement> findByProjectId(@Param("projectId") Long projectId);
 
+    int insertList(@Param("list")List<PageElement> list);
+
 }

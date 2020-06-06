@@ -53,6 +53,7 @@ public class ProjectPageController {
         return new ResponseInfo(true, projectPage);
     }
 
+
     @PostMapping("/add")
     @ApiOperation(value = "新增")
     public ResponseInfo savaProjectPage(@RequestBody ProjectPage projectPage) {
@@ -83,5 +84,12 @@ public class ProjectPageController {
     public ResponseInfo delProjectPage(@RequestBody ProjectPage projectPage) {
         projectPageService.deleteByPrimaryKey(projectPage.getId());
         return new ResponseInfo(true, "删除项目页面成功");
+    }
+
+    @GetMapping("/copyPageById/{id}")
+    @ApiOperation(value = "通过id复制页面")
+    public ResponseInfo copyPageById(@PathVariable Long id) {
+        Boolean aBoolean = projectPageService.copyPageById(id);
+        return new ResponseInfo(true, aBoolean);
     }
 }

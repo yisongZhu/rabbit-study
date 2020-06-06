@@ -46,10 +46,14 @@ public class NetTest {
     @Test
     public void test4() throws Exception {
 
-        Configuration conf = Configuration.defaultConfiguration();
-        String json = "[{\"c\":1,\"e\":\"evule\"},{\"c\":1,\"e\":\"evule\"}]";
-        List<String> genders0 = JsonPath.read(json,"");
-        System.out.println(genders0.toString());
+        String json = "[\n" +
+                "    {\n" +
+                "        \"ac_type\": \"A320\"" +
+
+                "    }\n" +
+                "]";
+        Object read = JsonPath.read(json, "[0].ac_type");
+        System.out.println(read.toString());
     }
 
 }

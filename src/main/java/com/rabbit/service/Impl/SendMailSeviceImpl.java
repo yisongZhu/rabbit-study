@@ -1,24 +1,19 @@
 package com.rabbit.service.Impl;
 
-import com.rabbit.config.RabbitConfig;
 import com.rabbit.service.SendMailSevice;
 import com.rabbit.utils.FreemarkerUtil;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,16 +62,37 @@ public class SendMailSeviceImpl implements SendMailSevice {
 
         javaMailSender.send(message);
     }
+    @Override
+    public void sendMail(String toUser, String subject, String text, String attachmentName, String attachment) throws Exception {
+        MimeMessage message = javaMailSender.createMimeMessage();
+
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setFrom(serverMail);
+        helper.setTo(toUser);
+        helper.setSubject(subject);
+        helper.setText(text, true);
+
+        if (attachment != null) {
+            InputStreamSource inputStreamSource = new ByteArrayResource(attachment.getBytes("UTF-8"));
+            helper.addAttachment(attachmentName, inputStreamSource);
+        }
+        javaMailSender.send(message);
+    }
 
     @Override
-    public void sendMailTemplate(List<String> toUser, String title, String templateName, Object templateParam) throws Exception {
+    public void sendMailTemplate(List<String> toUser, String title, String templateName, Object templateParam, String attachmentName, String attachment) throws Exception {
         MimeMessage message = javaMailSender.createMimeMessage();
 
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setFrom(serverMail);
         helper.setTo(toUser.toArray(new String[toUser.size()]));
         helper.setSubject(title);
-        //helper.addAttachment("附件",new File("H:/tup"));
+
+        if (attachment != null) {
+            InputStreamSource inputStreamSource = new ByteArrayResource(attachment.getBytes("UTF-8"));
+            helper.addAttachment(attachmentName == null ? "attachment" : attachmentName, inputStreamSource);
+        }
+
         Map<String, Object> model = new HashMap<>();
         model.put("params", templateParam);
 
@@ -90,5 +106,10 @@ public class SendMailSeviceImpl implements SendMailSevice {
         helper.setText(FreemarkerUtil.process(templateName, model), true);
         javaMailSender.send(message);
         log.info("邮件[{}]发送成功", title);
+    }
+
+    @Override
+    public void sendMailTemplate(List<String> toUser, String title, String templateName, Object templateParam) throws Exception {
+        sendMailTemplate(toUser, title, templateName, templateParam, null, null);
     }
 }

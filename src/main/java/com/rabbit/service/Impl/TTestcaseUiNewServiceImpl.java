@@ -10,6 +10,7 @@ import com.rabbit.model.TStepUiNew;
 import com.rabbit.model.TSuiteCaseUi;
 import com.rabbit.service.TFileInfoService;
 import com.rabbit.service.TStepUiNewService;
+import com.rabbit.utils.UserUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -107,6 +108,8 @@ public class TTestcaseUiNewServiceImpl implements TTestcaseUiNewService {
         if (byNameAndProjectId.size() > 0) {
             throw new IllegalArgumentException("用例【" + testcaseUiNewDto.getName() + "】已存在");
         }
+        testcaseUiNewDto.setUpdateBy(UserUtil.getLoginUser().getNickname());
+        testcaseUiNewDto.setCreateBy(UserUtil.getLoginUser().getNickname());
         tTestcaseUiNewMapper.insertSelective(testcaseUiNewDto);
         List<TStepUiNew> testSteps = testcaseUiNewDto.getTestSteps();
         for (TStepUiNew tStepUiNew : testSteps) {
@@ -142,6 +145,7 @@ public class TTestcaseUiNewServiceImpl implements TTestcaseUiNewService {
                 throw new IllegalArgumentException("业务步骤中不能使用业务关键字，请检查");
             }
         }
+        testcaseUiNewDto.setUpdateBy(UserUtil.getLoginUser().getNickname());
         tTestcaseUiNewMapper.updateByPrimaryKey(testcaseUiNewDto);
         stepUiNewService.savaStep(testSteps);
         return testcaseUiNewDto;
@@ -167,5 +171,11 @@ public class TTestcaseUiNewServiceImpl implements TTestcaseUiNewService {
         return tTestcaseUiNewMapper.findByCaseTypeAndProjectId(caseType, projectId);
     }
 }
+
+
+
+
+
+
 
 

@@ -1,7 +1,11 @@
 package com.rabbit.dao;
+
+import com.rabbit.dto.TestcaseUiNewLogDto;
 import org.apache.ibatis.annotations.Param;
 
-import com.rabbit.model.TTestCaseUiNewLog;import java.util.List;
+import com.rabbit.model.TTestCaseUiNewLog;
+
+import java.util.List;
 
 public interface TTestCaseUiNewLogMapper {
     int deleteByPrimaryKey(Long id);
@@ -18,8 +22,10 @@ public interface TTestCaseUiNewLogMapper {
 
     List<TTestCaseUiNewLog> findByAll(TTestCaseUiNewLog tTestCaseUiNewLog);
 
-    int deleteByPlanLogId(@Param("planLogId")Long planLogId);
+    int deleteByPlanLogId(@Param("planLogId") Long planLogId);
 
-    Long countBySuiteLogIdAndStatus(@Param("suiteLogId")Long suiteLogId,@Param("status")Integer status);
+    Long countBySuiteLogIdAndStatus(@Param("suiteLogId") Long suiteLogId, @Param("status") Integer status);
+
+    List<TestcaseUiNewLogDto> findDtoByPlanLogId(@Param("planLogId") Long planLogId);
 
 }

@@ -23,6 +23,7 @@
 2. 演示地址：
 [http://rabbittest.xyz/public](http://rabbittest.xyz/public)、
 账号密码:admin/admin1
+3. 交流群：835208549
 
 #### 参与贡献
 

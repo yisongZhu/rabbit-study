@@ -23,4 +23,6 @@ public interface TTestStepUiNewLogMapper {
     List<TTestStepUiNewLog> findByAll(TTestStepUiNewLog tTestStepUiNewLog);
 
     List<TTestStepUiNewLog> findByPlanJobId(@Param("planJobId")Long planJobId);
+
+    List<TTestStepUiNewLog> findByCaseLogId(@Param("caseLogId")Integer caseLogId);
 }

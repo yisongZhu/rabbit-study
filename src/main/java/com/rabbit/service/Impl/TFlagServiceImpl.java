@@ -58,18 +58,16 @@ public class TFlagServiceImpl implements TFlagService {
     }
 
     @Override
-    public List<TFlag> findByNameAndProjectId(String name, Long projectId) {
-        return tFlagMapper.findByNameAndProjectId(name, projectId);
-    }
-
-    @Override
-    public List<TFlag> findByNameAndProjectIdAndIdNot(String name, Long projectId, Long notId) {
-        return tFlagMapper.findByNameAndProjectIdAndIdNot(name, projectId, notId);
-    }
-
-    @Override
     public List<TFlag> findByProjectIdAndType(Long projectId, Integer type) {
         return tFlagMapper.findByProjectIdAndType(projectId, type);
+    }
+    @Override
+    public List<TFlag> findByNameAndTypeAndProjectId(String name, Integer type, Long projectId) {
+        return tFlagMapper.findByNameAndTypeAndProjectId(name, type, projectId);
+    }
+    @Override
+    public List<TFlag> findByNameAndTypeAndProjectIdAndIdNot(String name, Integer type, Long projectId, Long notId) {
+        return tFlagMapper.findByNameAndTypeAndProjectIdAndIdNot(name, type, projectId, notId);
     }
 }
 

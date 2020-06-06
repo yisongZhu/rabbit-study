@@ -52,7 +52,7 @@ public class FlagController {
     @PostMapping("/add")
     @ApiOperation(value = "新增")
     public ResponseInfo savaTFlag(@RequestBody TFlag tFlag) {
-        List<TFlag> tFlags = flagService.findByNameAndProjectId(tFlag.getName(), tFlag.getProjectId());
+        List<TFlag> tFlags = flagService.findByNameAndTypeAndProjectId(tFlag.getName(), tFlag.getType(), tFlag.getProjectId());
         if (tFlags.size() > 0) {
             return new ResponseInfo(false, new ErrorInfo(520, "标签【" + tFlag.getName() + "】已存在"));
         }
@@ -64,7 +64,7 @@ public class FlagController {
     @PutMapping("/edit")
     @ApiOperation(value = "编辑")
     public ResponseInfo editTFlag(@RequestBody TFlag tFlag) {
-        List<TFlag> tFlags = flagService.findByNameAndProjectIdAndIdNot(tFlag.getName(), tFlag.getProjectId(), tFlag.getId());
+        List<TFlag> tFlags = flagService.findByNameAndTypeAndProjectIdAndIdNot(tFlag.getName(), tFlag.getType(), tFlag.getProjectId(), tFlag.getId());
         if (tFlags.size() > 0) {
             return new ResponseInfo(false, new ErrorInfo(520, "标签【" + tFlag.getName() + "】已存在"));
         }

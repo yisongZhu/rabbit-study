@@ -21,7 +21,11 @@ public interface TFlagMapper {
 
     List<TFlag> findByProjectId(@Param("projectId") Long projectId);
 
-    List<TFlag> findByNameAndProjectId(@Param("name") String name, @Param("projectId") Long projectId);
 
-    List<TFlag> findByNameAndProjectIdAndIdNot(@Param("name") String name, @Param("projectId") Long projectId, @Param("notId") Long notId);
+    List<TFlag> findByNameAndTypeAndProjectId(@Param("name")String name,@Param("type")Integer type,@Param("projectId")Long projectId);
+
+
+    List<TFlag> findByNameAndTypeAndProjectIdAndIdNot(@Param("name")String name,@Param("type")Integer type,@Param("projectId")Long projectId,@Param("notId")Long notId);
+
+
 }

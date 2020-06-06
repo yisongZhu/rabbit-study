@@ -10,17 +10,27 @@ public class TTestcaseUiNew implements Serializable {
 
     private String name;
 
+    /**
+     * 环境id
+     */
+    private Long envId;
+
     private Long projectId;
 
     /**
      * 超时时间，单位分
      */
-    private Integer timoutTime;
+    private Long timoutTime;
 
     /**
      * 失败了是否继续0：不继续，1：继续
      */
     private Integer failContinue;
+
+    /**
+     * 标签
+     */
+    private String flags;
 
     /**
      * 业务名参数

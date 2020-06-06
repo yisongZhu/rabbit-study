@@ -24,11 +24,11 @@ public interface TFlagService {
 
     List<TFlag> findByProjectId(Long projectId);
 
-    List<TFlag> findByNameAndProjectId(String name, Long projectId);
-
-    List<TFlag> findByNameAndProjectIdAndIdNot(String name, Long projectId, Long notId);
-
     List<TFlag> findByProjectIdAndType(Long projectId, Integer type);
+
+    List<TFlag> findByNameAndTypeAndProjectId(String name, Integer type, Long projectId);
+
+    List<TFlag> findByNameAndTypeAndProjectIdAndIdNot(String name, Integer type, Long projectId, Long notId);
 }
 
 

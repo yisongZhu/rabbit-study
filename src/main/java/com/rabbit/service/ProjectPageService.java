@@ -25,6 +25,8 @@ public interface ProjectPageService {
     List<ProjectPageDto> findDtoByProjectIdAndPageNameAndIdNot(Long projectId, String pageName, Long notId);
 
     PageInfo<ProjectPageDto> findDtoByAllwithPage(int page, int pageSize, ProjectPage projectPage);
+
+    Boolean copyPageById(Long id) ;
 }
 
 
